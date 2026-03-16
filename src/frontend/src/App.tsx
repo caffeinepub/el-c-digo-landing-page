@@ -3,6 +3,12 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
+const HOTMART_URL = "https://pay.hotmart.com/S104758048Y?checkoutMode=10";
+
+function openHotmart() {
+  window.open(HOTMART_URL, "_blank", "noopener,noreferrer");
+}
+
 function scrollToPrecio() {
   document.querySelector("#precio")?.scrollIntoView({ behavior: "smooth" });
 }
@@ -981,7 +987,12 @@ function PrecioSection() {
 
         {/* CTA #3 — single button */}
         <div style={{ width: "100%", maxWidth: "480px", marginBottom: "16px" }}>
-          <CtaButton large fullWidth data-ocid="precio.primary_button">
+          <CtaButton
+            large
+            fullWidth
+            data-ocid="precio.primary_button"
+            onClick={openHotmart}
+          >
             ACCEDER AHORA
           </CtaButton>
         </div>
@@ -1222,7 +1233,7 @@ function FaqSection() {
 
         {/* CTA #4 — post-FAQ */}
         <div style={{ marginTop: "3rem" }}>
-          <CtaBlock dataOcid="faq.primary_button" />
+          <CtaBlock dataOcid="faq.primary_button" onClick={openHotmart} />
         </div>
       </div>
     </section>
