@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 const HOTMART_URL = "https://pay.hotmart.com/S104758048Y?checkoutMode=10";
 
 function openHotmart() {
-  window.open(HOTMART_URL, "_blank", "noopener,noreferrer");
+  window.location.href = HOTMART_URL;
 }
 
 function scrollToPrecio() {
@@ -774,7 +774,7 @@ function IncludesSection() {
         </div>
 
         {/* CTA #2 */}
-        <CtaBlock dataOcid="includes.primary_button" />
+        <CtaBlock dataOcid="includes.primary_button" onClick={openHotmart} />
       </div>
     </section>
   );
