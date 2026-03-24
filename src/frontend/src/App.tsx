@@ -1,6 +1,6 @@
 import { ArrowRight, Check, ChevronDown, Shield, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
 const HOTMART_URL = "https://pay.hotmart.com/S104758048Y?checkoutMode=10";
@@ -242,148 +242,61 @@ function VturbPlayer() {
   );
 }
 
-// ─── VIDEO CTA BLOCK — delayed reveal after 3 min 55 sec of ACTUAL playback ───
-// Strategy: poll for the real <video> element inside the Vturb Shadow DOM,
-// then attach standard HTML5 video events to it directly.
-// The button NEVER appears unless the video has actually played 235+ seconds.
-const VIDEO_CTA_THRESHOLD_S = 3 * 60 + 55; // 235 seconds of actual playback
-
-function VideoCtaBlock() {
+// ─── VIDEO CTA BLOCK — appears after first click on player + 3:55 wall-clock ──
+// Strategy: listen for first click/touch on the vturb element (or its container),
+// then start a 235-second wall-clock timer. Once elapsed, fade in the CTA block.
+function VideoCtaBlock({
+  onContainerClick,
+}: {
+  onContainerClick: (handler: () => void) => void;
+}) {
   const [visible, setVisible] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
-  const revealedRef = useRef(false);
+  const timerStartedRef = useRef(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    let accumulated = 0;
-    let lastTime: number | null = null;
-    let wallClockInterval: ReturnType<typeof setInterval> | null = null;
-    let pollInterval: ReturnType<typeof setInterval> | null = null;
-    let attachedVideo: HTMLVideoElement | null = null;
-
-    function reveal() {
-      if (revealedRef.current) return;
-      revealedRef.current = true;
+  const startTimer = useCallback(() => {
+    if (timerStartedRef.current) return;
+    timerStartedRef.current = true;
+    timerRef.current = setTimeout(() => {
       setVisible(true);
       requestAnimationFrame(() => setFadeIn(true));
-      stopWallClock();
-    }
+    }, 235000);
+  }, []);
 
-    function startWallClock(video: HTMLVideoElement) {
-      if (wallClockInterval) return;
-      let lastSnapshot = video.currentTime;
-      wallClockInterval = setInterval(() => {
-        if (revealedRef.current) {
-          stopWallClock();
-          return;
-        }
-        const now = video.currentTime;
-        if (now > lastSnapshot) {
-          accumulated += now - lastSnapshot;
-          if (accumulated >= VIDEO_CTA_THRESHOLD_S) reveal();
-        }
-        lastSnapshot = now;
-      }, 500);
-    }
+  useEffect(() => {
+    // Register the handler with the parent container
+    onContainerClick(startTimer);
 
-    function stopWallClock() {
-      if (wallClockInterval) {
-        clearInterval(wallClockInterval);
-        wallClockInterval = null;
+    // Also poll for the vturb element and attach click/touch listeners directly
+    let retries = 0;
+    let retryTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    function attachToVturb() {
+      const el = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
+      if (el) {
+        el.addEventListener("click", startTimer, { once: true });
+        el.addEventListener("touchstart", startTimer, { once: true });
+        el.addEventListener("touchend", startTimer, { once: true });
+      } else if (retries < 30) {
+        retries++;
+        retryTimeout = setTimeout(attachToVturb, 300);
       }
     }
 
-    function handleTimeUpdate(e: Event) {
-      if (revealedRef.current) return;
-      const video = e.target as HTMLVideoElement;
-      const ct = video.currentTime;
-      if (lastTime !== null && ct > lastTime) {
-        accumulated += ct - lastTime;
-        if (accumulated >= VIDEO_CTA_THRESHOLD_S) {
-          reveal();
-          return;
-        }
-      }
-      lastTime = ct;
-    }
-
-    function handlePlay(e: Event) {
-      startWallClock(e.target as HTMLVideoElement);
-    }
-
-    function handlePause() {
-      stopWallClock();
-    }
-
-    function attachToVideo(video: HTMLVideoElement) {
-      attachedVideo = video;
-      video.addEventListener("timeupdate", handleTimeUpdate);
-      video.addEventListener("play", handlePlay);
-      video.addEventListener("playing", handlePlay);
-      video.addEventListener("pause", handlePause);
-      video.addEventListener("ended", handlePause);
-      // If video is already playing when we attach (e.g. autoplay)
-      if (!video.paused) {
-        startWallClock(video);
-      }
-    }
-
-    function findVideoElement(): HTMLVideoElement | null {
-      const host = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
-      if (!host) return null;
-
-      // Strategy 1: Shadow DOM
-      const shadowVideo = (
-        host as Element & { shadowRoot?: ShadowRoot }
-      ).shadowRoot?.querySelector("video");
-      if (shadowVideo) return shadowVideo as HTMLVideoElement;
-
-      // Strategy 2: Direct child (light DOM inside custom element)
-      const directVideo = host.querySelector("video");
-      if (directVideo) return directVideo as HTMLVideoElement;
-
-      // Strategy 3: Iframe srcdoc / nested iframes — look for video in all iframes
-      const iframes = document.querySelectorAll("iframe");
-      for (const iframe of iframes) {
-        try {
-          const iframeVideo = iframe.contentDocument?.querySelector("video");
-          if (iframeVideo) return iframeVideo as HTMLVideoElement;
-        } catch {
-          // cross-origin iframe — skip
-        }
-      }
-
-      return null;
-    }
-
-    // Poll every 500ms until we find the <video> element
-    pollInterval = setInterval(() => {
-      if (revealedRef.current) {
-        if (pollInterval) clearInterval(pollInterval);
-        return;
-      }
-      const video = findVideoElement();
-      if (video && video !== attachedVideo) {
-        // Found a (new) video element — attach events
-        if (pollInterval) {
-          clearInterval(pollInterval);
-          pollInterval = null;
-        }
-        attachToVideo(video);
-      }
-    }, 500);
+    attachToVturb();
 
     return () => {
-      if (pollInterval) clearInterval(pollInterval);
-      stopWallClock();
-      if (attachedVideo) {
-        attachedVideo.removeEventListener("timeupdate", handleTimeUpdate);
-        attachedVideo.removeEventListener("play", handlePlay);
-        attachedVideo.removeEventListener("playing", handlePlay);
-        attachedVideo.removeEventListener("pause", handlePause);
-        attachedVideo.removeEventListener("ended", handlePause);
+      if (retryTimeout) clearTimeout(retryTimeout);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      const el = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
+      if (el) {
+        el.removeEventListener("click", startTimer);
+        el.removeEventListener("touchstart", startTimer);
+        el.removeEventListener("touchend", startTimer);
       }
     };
-  }, []);
+  }, [onContainerClick, startTimer]);
 
   if (!visible) {
     return (
@@ -453,6 +366,16 @@ function VideoCtaBlock() {
 }
 
 function VideoSection() {
+  const ctaHandlerRef = useRef<(() => void) | null>(null);
+
+  function registerCtaHandler(handler: () => void) {
+    ctaHandlerRef.current = handler;
+  }
+
+  function handleContainerClick() {
+    ctaHandlerRef.current?.();
+  }
+
   return (
     <section
       id="video"
@@ -520,18 +443,21 @@ function VideoSection() {
         </div>
 
         {/* Vturb Video embed — primary focal point */}
+        {/* biome-ignore lint/a11y/useKeyWithClickEvents: video container click-to-start-timer */}
         <div
           style={{
             borderRadius: "12px",
             border: "1px solid #2a2a2a",
             overflow: "hidden",
+            cursor: "pointer",
           }}
+          onClick={handleContainerClick}
         >
           <VturbPlayer />
         </div>
 
-        {/* CTA below VSL — delayed reveal at 3:55 of actual playback */}
-        <VideoCtaBlock />
+        {/* CTA below VSL — revealed after first click + 3:55 wall-clock */}
+        <VideoCtaBlock onContainerClick={registerCtaHandler} />
       </div>
     </section>
   );
@@ -540,10 +466,25 @@ function VideoSection() {
 // ─── SECTION 3: EL ERROR INVISIBLE ───────────────────────────────────────────
 function ErrorSection() {
   const paragraphs = [
-    "Cuando sientes presión emocional, tu cerebro activa el modo supervivencia. No piensa. Reacciona.",
-    "Esa reacción — el mensaje impulsivo, la explicación de más, el silencio ansioso — destruye tu postura en segundos.",
-    "Y la postura lo cambia todo. No las palabras. No las intenciones. La postura.",
-    "El verdadero problema no es lo que sientes. Es que no tienes un sistema para regularte antes de actuar.",
+    "Cuando sientes presión emocional…",
+    "tu cerebro entra en modo supervivencia.",
+    "No piensa.",
+    "Reacciona.",
+    "Y en ese momento…",
+    "pierdes el control.",
+    "Ese mensaje impulsivo.",
+    "Esa explicación de más.",
+    "Ese silencio lleno de ansiedad.",
+    "Todo eso…",
+    "destruye tu postura en segundos.",
+    "Y la postura lo cambia todo.",
+    "No las palabras.",
+    "No las intenciones.",
+    "La postura.",
+    "Y aquí está el verdadero problema:",
+    "no es lo que sientes.",
+    "Es que no tienes un sistema…",
+    "para regularte antes de actuar.",
   ];
 
   return (
