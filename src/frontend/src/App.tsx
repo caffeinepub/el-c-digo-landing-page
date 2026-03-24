@@ -1,6 +1,6 @@
 import { ArrowRight, Check, ChevronDown, Shield, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
 const HOTMART_URL = "https://pay.hotmart.com/S104758048Y?checkoutMode=10";
@@ -242,6 +242,147 @@ function VturbPlayer() {
   );
 }
 
+// ─── VIDEO CTA BLOCK — delayed reveal at 3 min 55 sec of playback ─────────────
+const VIDEO_CTA_DELAY_MS = (3 * 60 + 55) * 1000; // 235 000 ms
+
+function VideoCtaBlock() {
+  const [visible, setVisible] = useState(false);
+  const [fadeIn, setFadeIn] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    // Listen for Vturb timeupdate events to track actual video playback time.
+    // Vturb dispatches a custom "timeupdate" event on the smartplayer element.
+    // We accumulate played time and reveal the block once the threshold is reached.
+    let accumulated = 0;
+    let lastTime: number | null = null;
+    let revealed = false;
+
+    const playerEl = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
+
+    function handleTimeUpdate(e: Event) {
+      if (revealed) return;
+      const evt = e as CustomEvent & { detail?: { currentTime?: number } };
+      const currentTime =
+        evt.detail?.currentTime ??
+        (playerEl as HTMLElement & { currentTime?: number })?.currentTime;
+
+      if (typeof currentTime === "number") {
+        if (lastTime !== null && currentTime > lastTime) {
+          accumulated += currentTime - lastTime;
+        }
+        lastTime = currentTime;
+
+        if (accumulated * 1000 >= VIDEO_CTA_DELAY_MS) {
+          revealed = true;
+          setVisible(true);
+          // Trigger fade-in on next frame so transition fires
+          requestAnimationFrame(() => setFadeIn(true));
+        }
+      }
+    }
+
+    // Attach to the custom element once it exists
+    function tryAttach() {
+      const el = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
+      if (el) {
+        el.addEventListener("timeupdate", handleTimeUpdate);
+        // Also listen on the shadow root video if accessible
+        return true;
+      }
+      return false;
+    }
+
+    if (!tryAttach()) {
+      // Retry until player is mounted
+      const interval = setInterval(() => {
+        if (tryAttach()) clearInterval(interval);
+      }, 500);
+    }
+
+    // Fallback: wall-clock timer in case the player events are not accessible
+    timerRef.current = setTimeout(() => {
+      if (!revealed) {
+        revealed = true;
+        setVisible(true);
+        requestAnimationFrame(() => setFadeIn(true));
+      }
+    }, VIDEO_CTA_DELAY_MS);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      const el = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
+      if (el) el.removeEventListener("timeupdate", handleTimeUpdate);
+    };
+  }, []);
+
+  if (!visible) {
+    return (
+      <div
+        style={{ height: 0, overflow: "hidden", margin: 0, padding: 0 }}
+        aria-hidden
+      />
+    );
+  }
+
+  return (
+    <div
+      style={{
+        marginTop: "28px",
+        marginBottom: "56px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        background: "transparent",
+        opacity: fadeIn ? 1 : 0,
+        transition: "opacity 0.8s ease",
+        pointerEvents: "auto",
+      }}
+      aria-hidden={!fadeIn}
+    >
+      {/* Button + microcopy — always together as one block */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+          maxWidth: "480px",
+          gap: "0",
+        }}
+      >
+        {/* Button */}
+        <div style={{ width: "100%" }}>
+          <CtaButton
+            large
+            fullWidth
+            data-ocid="video.primary_button"
+            onClick={scrollToPrecio}
+          >
+            ACCEDER AL PROTOCOLO AHORA
+          </CtaButton>
+        </div>
+
+        {/* Microcopy — always shown with the button, never alone */}
+        <p
+          style={{
+            marginTop: "14px",
+            marginBottom: "0",
+            fontSize: "0.82rem",
+            color: "rgba(255,255,255,0.6)",
+            textAlign: "center",
+            lineHeight: 1.5,
+            fontWeight: 400,
+            letterSpacing: "0.01em",
+          }}
+        >
+          USD 17 • Acceso inmediato • Garantía de 7 días
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function VideoSection() {
   return (
     <section
@@ -253,53 +394,61 @@ function VideoSection() {
       }}
     >
       <div style={{ maxWidth: "700px", margin: "0 auto" }}>
-        {/* Main intro line — inline so red underline matches text width */}
-        <div style={{ textAlign: "center", marginBottom: "0" }}>
-          <span
-            style={{
-              fontSize: "clamp(1.25rem, 3.5vw, 1.6rem)",
-              fontWeight: 600,
-              color: "#ffffff",
-              lineHeight: 1.3,
-              display: "inline",
-            }}
-          >
-            Mira este video completo (5 minutos).
-          </span>
-        </div>
-
-        {/* Red accent underline — tight under the text, centered */}
+        {/* Video intro text — clear hierarchy, mobile-first */}
         <div
           style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "14px",
-            marginBottom: "16px",
-          }}
-        >
-          <div
-            style={{
-              height: "2px",
-              width: "clamp(240px, 60%, 370px)",
-              background: "#C1121F",
-              borderRadius: "2px",
-            }}
-          />
-        </div>
-
-        {/* Supporting microcopy */}
-        <p
-          style={{
-            fontSize: "0.875rem",
-            fontWeight: 400,
-            color: "rgba(255,255,255,0.75)",
             textAlign: "center",
-            margin: "0 0 28px",
-            lineHeight: 1.5,
+            marginBottom: "36px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          Es importante verlo hasta el final.
-        </p>
+          {/* Line 1 — most prominent */}
+          <p
+            style={{
+              fontSize: "clamp(1.3rem, 4vw, 1.6rem)",
+              fontWeight: 800,
+              color: "#ffffff",
+              lineHeight: 1.2,
+              margin: 0,
+              maxWidth: "300px",
+              letterSpacing: "-0.01em",
+            }}
+          >
+            Mira esto hasta el final.
+          </p>
+
+          {/* Spacer between line 1 and lines 2–3 */}
+          <div style={{ height: "20px" }} />
+
+          {/* Lines 2–3 — smaller and visually lighter */}
+          <p
+            style={{
+              fontSize: "clamp(0.82rem, 2.4vw, 0.92rem)",
+              fontWeight: 400,
+              color: "rgba(255,255,255,0.55)",
+              lineHeight: 1.6,
+              margin: 0,
+              maxWidth: "320px",
+            }}
+          >
+            Vas a entender por qué sigues perdiendo postura…
+          </p>
+
+          <p
+            style={{
+              fontSize: "clamp(0.82rem, 2.4vw, 0.92rem)",
+              fontWeight: 400,
+              color: "rgba(255,255,255,0.55)",
+              lineHeight: 1.6,
+              margin: "6px 0 0",
+              maxWidth: "320px",
+            }}
+          >
+            y qué hacer exactamente en el momento en que ocurre.
+          </p>
+        </div>
 
         {/* Vturb Video embed — primary focal point */}
         <div
@@ -312,28 +461,8 @@ function VideoSection() {
           <VturbPlayer />
         </div>
 
-        {/* CTA below VSL — no microcopy, no grey bar, clean spacing */}
-        <div
-          style={{
-            marginTop: "28px",
-            marginBottom: "56px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            background: "transparent",
-          }}
-        >
-          <div style={{ width: "100%", maxWidth: "480px" }}>
-            <CtaButton
-              large
-              fullWidth
-              data-ocid="video.primary_button"
-              onClick={scrollToPrecio}
-            >
-              ACCEDER AL CÓDIGO
-            </CtaButton>
-          </div>
-        </div>
+        {/* CTA below VSL — delayed reveal at 3:55 of playback */}
+        <VideoCtaBlock />
       </div>
     </section>
   );
