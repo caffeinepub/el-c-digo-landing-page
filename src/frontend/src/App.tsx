@@ -243,8 +243,9 @@ function VturbPlayer() {
 }
 
 // ─── VIDEO CTA BLOCK — delayed reveal after 3 min 55 sec of ACTUAL playback ───
-// The timer only starts counting when the video is actually playing.
-// No wall-clock fallback — the button will NEVER appear unless the video plays.
+// Strategy: poll for the real <video> element inside the Vturb Shadow DOM,
+// then attach standard HTML5 video events to it directly.
+// The button NEVER appears unless the video has actually played 235+ seconds.
 const VIDEO_CTA_THRESHOLD_S = 3 * 60 + 55; // 235 seconds of actual playback
 
 function VideoCtaBlock() {
@@ -255,31 +256,28 @@ function VideoCtaBlock() {
   useEffect(() => {
     let accumulated = 0;
     let lastTime: number | null = null;
-    let isPlaying = false;
     let wallClockInterval: ReturnType<typeof setInterval> | null = null;
-    let attachInterval: ReturnType<typeof setInterval> | null = null;
+    let pollInterval: ReturnType<typeof setInterval> | null = null;
+    let attachedVideo: HTMLVideoElement | null = null;
 
     function reveal() {
       if (revealedRef.current) return;
       revealedRef.current = true;
       setVisible(true);
       requestAnimationFrame(() => setFadeIn(true));
-      if (wallClockInterval) clearInterval(wallClockInterval);
+      stopWallClock();
     }
 
-    // Wall-clock ticker — only accumulates time while the video is playing.
-    // This handles players that don't fire timeupdate reliably.
-    function startWallClock(el: HTMLElement & { currentTime?: number }) {
-      if (wallClockInterval) return; // already running
-      let lastSnapshot = el.currentTime ?? null;
+    function startWallClock(video: HTMLVideoElement) {
+      if (wallClockInterval) return;
+      let lastSnapshot = video.currentTime;
       wallClockInterval = setInterval(() => {
         if (revealedRef.current) {
-          if (wallClockInterval) clearInterval(wallClockInterval);
+          stopWallClock();
           return;
         }
-        const now = el.currentTime ?? null;
-        if (now !== null && lastSnapshot !== null && now > lastSnapshot) {
-          // Video is progressing — accumulate the delta
+        const now = video.currentTime;
+        if (now > lastSnapshot) {
           accumulated += now - lastSnapshot;
           if (accumulated >= VIDEO_CTA_THRESHOLD_S) reveal();
         }
@@ -296,70 +294,93 @@ function VideoCtaBlock() {
 
     function handleTimeUpdate(e: Event) {
       if (revealedRef.current) return;
-      const evt = e as CustomEvent & { detail?: { currentTime?: number } };
-      const ct =
-        evt.detail?.currentTime ??
-        (e.target as HTMLElement & { currentTime?: number })?.currentTime;
-      if (typeof ct === "number") {
-        if (lastTime !== null && ct > lastTime) {
-          accumulated += ct - lastTime;
-          if (accumulated >= VIDEO_CTA_THRESHOLD_S) {
-            reveal();
-            return;
-          }
+      const video = e.target as HTMLVideoElement;
+      const ct = video.currentTime;
+      if (lastTime !== null && ct > lastTime) {
+        accumulated += ct - lastTime;
+        if (accumulated >= VIDEO_CTA_THRESHOLD_S) {
+          reveal();
+          return;
         }
-        lastTime = ct;
       }
+      lastTime = ct;
     }
 
     function handlePlay(e: Event) {
-      isPlaying = true;
-      const el = e.target as HTMLElement & { currentTime?: number };
-      startWallClock(el);
+      startWallClock(e.target as HTMLVideoElement);
     }
 
     function handlePause() {
-      isPlaying = false;
       stopWallClock();
     }
 
-    function tryAttach() {
-      const el = document.getElementById("vid-69c1d386fd3b575eb62b95ca") as
-        | (HTMLElement & { currentTime?: number })
-        | null;
-      if (!el) return false;
-
-      el.addEventListener("timeupdate", handleTimeUpdate);
-      el.addEventListener("play", handlePlay);
-      el.addEventListener("playing", handlePlay);
-      el.addEventListener("pause", handlePause);
-      el.addEventListener("ended", handlePause);
-
-      // If the video is already playing when we attach (e.g. autoplay)
-      if (isPlaying) startWallClock(el);
-
-      return true;
+    function attachToVideo(video: HTMLVideoElement) {
+      attachedVideo = video;
+      video.addEventListener("timeupdate", handleTimeUpdate);
+      video.addEventListener("play", handlePlay);
+      video.addEventListener("playing", handlePlay);
+      video.addEventListener("pause", handlePause);
+      video.addEventListener("ended", handlePause);
+      // If video is already playing when we attach (e.g. autoplay)
+      if (!video.paused) {
+        startWallClock(video);
+      }
     }
 
-    if (!tryAttach()) {
-      attachInterval = setInterval(() => {
-        if (tryAttach() && attachInterval) {
-          clearInterval(attachInterval);
-          attachInterval = null;
+    function findVideoElement(): HTMLVideoElement | null {
+      const host = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
+      if (!host) return null;
+
+      // Strategy 1: Shadow DOM
+      const shadowVideo = (
+        host as Element & { shadowRoot?: ShadowRoot }
+      ).shadowRoot?.querySelector("video");
+      if (shadowVideo) return shadowVideo as HTMLVideoElement;
+
+      // Strategy 2: Direct child (light DOM inside custom element)
+      const directVideo = host.querySelector("video");
+      if (directVideo) return directVideo as HTMLVideoElement;
+
+      // Strategy 3: Iframe srcdoc / nested iframes — look for video in all iframes
+      const iframes = document.querySelectorAll("iframe");
+      for (const iframe of iframes) {
+        try {
+          const iframeVideo = iframe.contentDocument?.querySelector("video");
+          if (iframeVideo) return iframeVideo as HTMLVideoElement;
+        } catch {
+          // cross-origin iframe — skip
         }
-      }, 500);
+      }
+
+      return null;
     }
+
+    // Poll every 500ms until we find the <video> element
+    pollInterval = setInterval(() => {
+      if (revealedRef.current) {
+        if (pollInterval) clearInterval(pollInterval);
+        return;
+      }
+      const video = findVideoElement();
+      if (video && video !== attachedVideo) {
+        // Found a (new) video element — attach events
+        if (pollInterval) {
+          clearInterval(pollInterval);
+          pollInterval = null;
+        }
+        attachToVideo(video);
+      }
+    }, 500);
 
     return () => {
-      if (attachInterval) clearInterval(attachInterval);
-      if (wallClockInterval) clearInterval(wallClockInterval);
-      const el = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
-      if (el) {
-        el.removeEventListener("timeupdate", handleTimeUpdate);
-        el.removeEventListener("play", handlePlay);
-        el.removeEventListener("playing", handlePlay);
-        el.removeEventListener("pause", handlePause);
-        el.removeEventListener("ended", handlePause);
+      if (pollInterval) clearInterval(pollInterval);
+      stopWallClock();
+      if (attachedVideo) {
+        attachedVideo.removeEventListener("timeupdate", handleTimeUpdate);
+        attachedVideo.removeEventListener("play", handlePlay);
+        attachedVideo.removeEventListener("playing", handlePlay);
+        attachedVideo.removeEventListener("pause", handlePause);
+        attachedVideo.removeEventListener("ended", handlePause);
       }
     };
   }, []);
