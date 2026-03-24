@@ -1141,6 +1141,20 @@ function PrecioSection() {
       }}
     >
       <div style={{ maxWidth: "480px", margin: "0 auto" }}>
+        {/* Urgency note */}
+        <p
+          style={{
+            fontSize: "0.8rem",
+            color: "rgba(255,255,255,0.55)",
+            fontWeight: 400,
+            marginBottom: "20px",
+            letterSpacing: "0.01em",
+            lineHeight: 1.5,
+          }}
+        >
+          Disponible hoy. Puede no estar disponible después.
+        </p>
+
         {/* Headline */}
         <h2
           style={{
@@ -1152,22 +1166,8 @@ function PrecioSection() {
             lineHeight: 1.2,
           }}
         >
-          Accede hoy al sistema completo por solo 17 USD
+          Accede hoy al sistema completo por solo 17 USD (pago único)
         </h2>
-
-        {/* Pre-price label */}
-        <p
-          style={{
-            fontSize: "0.8rem",
-            color: "rgba(255,255,255,0.55)",
-            margin: "0 0 10px",
-            lineHeight: 1.5,
-            fontWeight: 400,
-            letterSpacing: "0.01em",
-          }}
-        >
-          Pago único. Acceso inmediato.
-        </p>
 
         {/* Large price */}
         <div style={{ marginBottom: "32px" }}>
@@ -1184,6 +1184,20 @@ function PrecioSection() {
             $17
           </span>
         </div>
+
+        {/* Supporting text */}
+        <p
+          style={{
+            fontSize: "0.95rem",
+            color: "rgba(255,255,255,0.75)",
+            fontWeight: 500,
+            lineHeight: 1.5,
+            marginBottom: "24px",
+            textAlign: "center",
+          }}
+        >
+          Esto es lo que haces en el momento exacto en que pierdes el control.
+        </p>
 
         {/* CTA #3 — single button — THIS IS THE ONLY CHECKOUT BUTTON */}
         <div style={{ width: "100%", maxWidth: "480px", marginBottom: "16px" }}>
