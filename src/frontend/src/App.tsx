@@ -220,33 +220,25 @@ function HeroSection() {
 
 // ─── SECTION 2: VIDEO ─────────────────────────────────────────────────────────
 function VturbPlayer() {
+  useEffect(() => {
+    const existingScript = document.querySelector(
+      'script[src*="69c1d386fd3b575eb62b95ca"]',
+    );
+    if (!existingScript) {
+      const s = document.createElement("script");
+      s.src =
+        "https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69c1d386fd3b575eb62b95ca/v4/player.js";
+      s.async = true;
+      document.head.appendChild(s);
+    }
+  }, []);
+
   return (
-    <div
-      id="ifr_69a62305ede7290ae64789eb_wrapper"
-      style={{ margin: "0 auto", width: "100%" }}
-    >
-      <div
-        style={{ position: "relative", paddingTop: "56.25%" }}
-        id="ifr_69a62305ede7290ae64789eb_aspect"
-      >
-        <iframe
-          title="El Código — Video de presentación"
-          frameBorder={0}
-          allowFullScreen
-          src="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69a62305ede7290ae64789eb/v4/embed.html"
-          id="ifr_69a62305ede7290ae64789eb"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-          }}
-          referrerPolicy="origin"
-          allow="autoplay; fullscreen"
-        />
-      </div>
-    </div>
+    // @ts-ignore — vturb-smartplayer is a custom element not in JSX types
+    <vturb-smartplayer
+      id="vid-69c1d386fd3b575eb62b95ca"
+      style={{ display: "block", margin: "0 auto", width: "100%" }}
+    />
   );
 }
 
