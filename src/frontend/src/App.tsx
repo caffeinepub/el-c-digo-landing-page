@@ -242,77 +242,125 @@ function VturbPlayer() {
   );
 }
 
-// ─── VIDEO CTA BLOCK — delayed reveal at 3 min 55 sec of playback ─────────────
-const VIDEO_CTA_DELAY_MS = (3 * 60 + 55) * 1000; // 235 000 ms
+// ─── VIDEO CTA BLOCK — delayed reveal after 3 min 55 sec of ACTUAL playback ───
+// The timer only starts counting when the video is actually playing.
+// No wall-clock fallback — the button will NEVER appear unless the video plays.
+const VIDEO_CTA_THRESHOLD_S = 3 * 60 + 55; // 235 seconds of actual playback
 
 function VideoCtaBlock() {
   const [visible, setVisible] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const revealedRef = useRef(false);
 
   useEffect(() => {
-    // Listen for Vturb timeupdate events to track actual video playback time.
-    // Vturb dispatches a custom "timeupdate" event on the smartplayer element.
-    // We accumulate played time and reveal the block once the threshold is reached.
     let accumulated = 0;
     let lastTime: number | null = null;
-    let revealed = false;
+    let isPlaying = false;
+    let wallClockInterval: ReturnType<typeof setInterval> | null = null;
+    let attachInterval: ReturnType<typeof setInterval> | null = null;
 
-    const playerEl = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
-
-    function handleTimeUpdate(e: Event) {
-      if (revealed) return;
-      const evt = e as CustomEvent & { detail?: { currentTime?: number } };
-      const currentTime =
-        evt.detail?.currentTime ??
-        (playerEl as HTMLElement & { currentTime?: number })?.currentTime;
-
-      if (typeof currentTime === "number") {
-        if (lastTime !== null && currentTime > lastTime) {
-          accumulated += currentTime - lastTime;
-        }
-        lastTime = currentTime;
-
-        if (accumulated * 1000 >= VIDEO_CTA_DELAY_MS) {
-          revealed = true;
-          setVisible(true);
-          // Trigger fade-in on next frame so transition fires
-          requestAnimationFrame(() => setFadeIn(true));
-        }
-      }
+    function reveal() {
+      if (revealedRef.current) return;
+      revealedRef.current = true;
+      setVisible(true);
+      requestAnimationFrame(() => setFadeIn(true));
+      if (wallClockInterval) clearInterval(wallClockInterval);
     }
 
-    // Attach to the custom element once it exists
-    function tryAttach() {
-      const el = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
-      if (el) {
-        el.addEventListener("timeupdate", handleTimeUpdate);
-        // Also listen on the shadow root video if accessible
-        return true;
-      }
-      return false;
-    }
-
-    if (!tryAttach()) {
-      // Retry until player is mounted
-      const interval = setInterval(() => {
-        if (tryAttach()) clearInterval(interval);
+    // Wall-clock ticker — only accumulates time while the video is playing.
+    // This handles players that don't fire timeupdate reliably.
+    function startWallClock(el: HTMLElement & { currentTime?: number }) {
+      if (wallClockInterval) return; // already running
+      let lastSnapshot = el.currentTime ?? null;
+      wallClockInterval = setInterval(() => {
+        if (revealedRef.current) {
+          if (wallClockInterval) clearInterval(wallClockInterval);
+          return;
+        }
+        const now = el.currentTime ?? null;
+        if (now !== null && lastSnapshot !== null && now > lastSnapshot) {
+          // Video is progressing — accumulate the delta
+          accumulated += now - lastSnapshot;
+          if (accumulated >= VIDEO_CTA_THRESHOLD_S) reveal();
+        }
+        lastSnapshot = now;
       }, 500);
     }
 
-    // Fallback: wall-clock timer in case the player events are not accessible
-    timerRef.current = setTimeout(() => {
-      if (!revealed) {
-        revealed = true;
-        setVisible(true);
-        requestAnimationFrame(() => setFadeIn(true));
+    function stopWallClock() {
+      if (wallClockInterval) {
+        clearInterval(wallClockInterval);
+        wallClockInterval = null;
       }
-    }, VIDEO_CTA_DELAY_MS);
+    }
+
+    function handleTimeUpdate(e: Event) {
+      if (revealedRef.current) return;
+      const evt = e as CustomEvent & { detail?: { currentTime?: number } };
+      const ct =
+        evt.detail?.currentTime ??
+        (e.target as HTMLElement & { currentTime?: number })?.currentTime;
+      if (typeof ct === "number") {
+        if (lastTime !== null && ct > lastTime) {
+          accumulated += ct - lastTime;
+          if (accumulated >= VIDEO_CTA_THRESHOLD_S) {
+            reveal();
+            return;
+          }
+        }
+        lastTime = ct;
+      }
+    }
+
+    function handlePlay(e: Event) {
+      isPlaying = true;
+      const el = e.target as HTMLElement & { currentTime?: number };
+      startWallClock(el);
+    }
+
+    function handlePause() {
+      isPlaying = false;
+      stopWallClock();
+    }
+
+    function tryAttach() {
+      const el = document.getElementById("vid-69c1d386fd3b575eb62b95ca") as
+        | (HTMLElement & { currentTime?: number })
+        | null;
+      if (!el) return false;
+
+      el.addEventListener("timeupdate", handleTimeUpdate);
+      el.addEventListener("play", handlePlay);
+      el.addEventListener("playing", handlePlay);
+      el.addEventListener("pause", handlePause);
+      el.addEventListener("ended", handlePause);
+
+      // If the video is already playing when we attach (e.g. autoplay)
+      if (isPlaying) startWallClock(el);
+
+      return true;
+    }
+
+    if (!tryAttach()) {
+      attachInterval = setInterval(() => {
+        if (tryAttach() && attachInterval) {
+          clearInterval(attachInterval);
+          attachInterval = null;
+        }
+      }, 500);
+    }
 
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (attachInterval) clearInterval(attachInterval);
+      if (wallClockInterval) clearInterval(wallClockInterval);
       const el = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
-      if (el) el.removeEventListener("timeupdate", handleTimeUpdate);
+      if (el) {
+        el.removeEventListener("timeupdate", handleTimeUpdate);
+        el.removeEventListener("play", handlePlay);
+        el.removeEventListener("playing", handlePlay);
+        el.removeEventListener("pause", handlePause);
+        el.removeEventListener("ended", handlePause);
+      }
     };
   }, []);
 
@@ -398,7 +446,7 @@ function VideoSection() {
         <div
           style={{
             textAlign: "center",
-            marginBottom: "36px",
+            marginBottom: "48px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -407,7 +455,7 @@ function VideoSection() {
           {/* Line 1 — most prominent */}
           <p
             style={{
-              fontSize: "clamp(1.3rem, 4vw, 1.6rem)",
+              fontSize: "clamp(1.75rem, 5.5vw, 2.2rem)",
               fontWeight: 800,
               color: "#ffffff",
               lineHeight: 1.2,
@@ -420,12 +468,12 @@ function VideoSection() {
           </p>
 
           {/* Spacer between line 1 and lines 2–3 */}
-          <div style={{ height: "20px" }} />
+          <div style={{ height: "28px" }} />
 
           {/* Lines 2–3 — smaller and visually lighter */}
           <p
             style={{
-              fontSize: "clamp(0.82rem, 2.4vw, 0.92rem)",
+              fontSize: "clamp(1rem, 3vw, 1.15rem)",
               fontWeight: 400,
               color: "rgba(255,255,255,0.55)",
               lineHeight: 1.6,
@@ -438,7 +486,7 @@ function VideoSection() {
 
           <p
             style={{
-              fontSize: "clamp(0.82rem, 2.4vw, 0.92rem)",
+              fontSize: "clamp(1rem, 3vw, 1.15rem)",
               fontWeight: 400,
               color: "rgba(255,255,255,0.55)",
               lineHeight: 1.6,
@@ -461,7 +509,7 @@ function VideoSection() {
           <VturbPlayer />
         </div>
 
-        {/* CTA below VSL — delayed reveal at 3:55 of playback */}
+        {/* CTA below VSL — delayed reveal at 3:55 of actual playback */}
         <VideoCtaBlock />
       </div>
     </section>
