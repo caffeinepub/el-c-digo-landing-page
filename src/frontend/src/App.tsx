@@ -81,10 +81,12 @@ function CtaBlock({
   children,
   dataOcid,
   onClick,
+  label = "ACCEDER AHORA",
 }: {
   children?: React.ReactNode;
   dataOcid?: string;
   onClick?: () => void;
+  label?: string;
 }) {
   return (
     <div
@@ -103,7 +105,7 @@ function CtaBlock({
         }}
       >
         <CtaButton large fullWidth data-ocid={dataOcid} onClick={onClick}>
-          ACCEDER AHORA
+          {label}
         </CtaButton>
       </div>
       {children}
@@ -465,26 +467,23 @@ function VideoSection() {
 
 // ─── SECTION 3: EL ERROR INVISIBLE ───────────────────────────────────────────
 function ErrorSection() {
-  const paragraphs = [
-    "Cuando sientes presión emocional…",
-    "tu cerebro entra en modo supervivencia.",
-    "No piensa.",
-    "Reacciona.",
-    "Y en ese momento…",
-    "pierdes el control.",
-    "Ese mensaje impulsivo.",
-    "Esa explicación de más.",
-    "Ese silencio lleno de ansiedad.",
-    "Todo eso…",
-    "destruye tu postura en segundos.",
-    "Y la postura lo cambia todo.",
-    "No las palabras.",
-    "No las intenciones.",
-    "La postura.",
-    "Y aquí está el verdadero problema:",
-    "no es lo que sientes.",
-    "Es que no tienes un sistema…",
-    "para regularte antes de actuar.",
+  const blocks = [
+    {
+      text: "Cuando sientes presión emocional, tu cerebro entra en modo supervivencia. No piensa. Reacciona.",
+      highlight: false,
+    },
+    {
+      text: "Esa reacción — el mensaje impulsivo, la explicación de más, el silencio lleno de ansiedad — destruye tu postura en segundos.",
+      highlight: false,
+    },
+    {
+      text: "Y la postura lo cambia todo. No las palabras. No las intenciones. La postura.",
+      highlight: false,
+    },
+    {
+      text: "El verdadero problema no es lo que sientes. Es que no tienes un sistema para regularte antes de actuar.",
+      highlight: true,
+    },
   ];
 
   return (
@@ -514,22 +513,22 @@ function ErrorSection() {
         <div
           style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
         >
-          {paragraphs.map((para, i) => (
+          {blocks.map((block, i) => (
             <p
               // biome-ignore lint/suspicious/noArrayIndexKey: static list, order never changes
               key={i}
               style={{
-                color: i === paragraphs.length - 1 ? "#ffffff" : "#c8c8c8",
+                color: block.highlight ? "#ffffff" : "#c8c8c8",
                 lineHeight: 1.8,
                 fontSize: "1.05rem",
                 paddingLeft: "1.25rem",
-                borderLeft:
-                  i === paragraphs.length - 1
-                    ? "3px solid var(--brand-red)"
-                    : "3px solid #2a2a2a",
+                borderLeft: block.highlight
+                  ? "3px solid var(--brand-red)"
+                  : "3px solid #2a2a2a",
+                margin: 0,
               }}
             >
-              {para}
+              {block.text}
             </p>
           ))}
         </div>
@@ -544,22 +543,22 @@ function SolutionSection() {
     {
       num: 1,
       title: "Interrupción",
-      desc: "Detén el impulso antes de que se convierta en acción.",
+      desc: "Corta el impulso en el momento exacto antes de reaccionar.",
     },
     {
       num: 2,
       title: "Estabilización",
-      desc: "Regula tu estado interno en menos de 3 minutos.",
+      desc: "Recupera el control interno en segundos y baja la intensidad emocional.",
     },
     {
       num: 3,
       title: "Silencio estratégico",
-      desc: "Recupera tu postura sin decir nada.",
+      desc: "No reacciones. Mantén el control y deja que la tensión juegue a tu favor.",
     },
     {
       num: 4,
       title: "Respuesta estructurada",
-      desc: "Cuando actúes, lo harás desde la calma, no desde el miedo.",
+      desc: "Cuando actúes, será desde el control… no desde la necesidad.",
     },
   ];
 
@@ -681,17 +680,17 @@ function ProtocolSection() {
     {
       num: 1,
       label: "Reconocimiento",
-      desc: "Identifica qué disparó la reacción. Nómbralo sin actuar.",
+      desc: "Detecta el impulso en el instante en que aparece. Nómbralo… pero no actúes.",
     },
     {
       num: 2,
       label: "Regulación",
-      desc: "Técnica de respiración + ancla mental para salir del modo reactivo.",
+      desc: "Aplica la técnica que corta la reacción automática y baja la intensidad emocional.",
     },
     {
       num: 3,
       label: "Decisión",
-      desc: "Desde la calma, elige conscientemente si responder, esperar o no hacer nada.",
+      desc: "Con la mente estable, eliges cómo actuar… o decides no actuar.",
     },
   ];
 
@@ -713,7 +712,7 @@ function ProtocolSection() {
           }}
         >
           Tres minutos antes de{" "}
-          <span style={{ color: "var(--brand-red)" }}>arruinar tres días</span>
+          <span style={{ color: "var(--brand-red)" }}>arruinarlo todo</span>
         </h2>
 
         <p
@@ -723,7 +722,7 @@ function ProtocolSection() {
             fontSize: "0.95rem",
           }}
         >
-          El protocolo de intervención inmediata
+          El protocolo que usas en el momento exacto en que pierdes el control
         </p>
 
         {/* Protocol container */}
@@ -802,24 +801,21 @@ function ProtocolSection() {
 function IncludesSection() {
   const items = [
     {
-      title: "Protocolo 3 Minutos",
-      desc: "Audio + checklist de aplicación inmediata",
+      title: "Protocolo exacto para cortar la reacción en segundos",
+      desc: "",
     },
     {
-      title: "Plan de estabilización 24–72h",
-      desc: "Hoja de ruta para los momentos críticos posteriores",
+      title: "Audios guiados para estabilizarte en el momento exacto",
+      desc: "",
     },
     {
-      title: "Framework de respuesta controlada",
-      desc: "Estructura exacta para actuar desde la calma",
+      title:
+        "Método claro para recuperar el control sin reaccionar impulsivamente",
+      desc: "",
     },
     {
-      title: "Checklists descargables",
-      desc: "Herramientas para usar en el momento",
-    },
-    {
-      title: "Área privada con acceso inmediato",
-      desc: "Acceso de por vida desde cualquier dispositivo",
+      title: "Instrucciones aplicables en cualquier situación emocional",
+      desc: "",
     },
   ];
 
@@ -841,9 +837,22 @@ function IncludesSection() {
             marginBottom: "2.5rem",
           }}
         >
-          Todo lo que obtienes{" "}
-          <span style={{ color: "var(--brand-red)" }}>hoy</span>
+          Todo lo que obtienes hoy{" "}
+          <span style={{ color: "var(--brand-red)" }}>(acceso inmediato)</span>
         </h2>
+
+        <p
+          style={{
+            color: "#c8c8c8",
+            fontSize: "0.9rem",
+            fontWeight: 600,
+            textAlign: "left",
+            marginBottom: "0.75rem",
+            marginTop: "0",
+          }}
+        >
+          Acceso completo al sistema:
+        </p>
 
         <div
           style={{
@@ -894,18 +903,24 @@ function IncludesSection() {
                 >
                   {item.title}
                 </span>
-                <span
-                  style={{ color: "var(--brand-muted)", fontSize: "0.83rem" }}
-                >
-                  {item.desc}
-                </span>
+                {item.desc && (
+                  <span
+                    style={{ color: "var(--brand-muted)", fontSize: "0.83rem" }}
+                  >
+                    {item.desc}
+                  </span>
+                )}
               </div>
             </div>
           ))}
         </div>
 
         {/* CTA #2 */}
-        <CtaBlock dataOcid="includes.primary_button" onClick={openHotmart} />
+        <CtaBlock
+          dataOcid="includes.primary_button"
+          onClick={openHotmart}
+          label="QUIERO ACCEDER AHORA"
+        />
       </div>
     </section>
   );
@@ -1097,8 +1112,22 @@ function PrecioSection() {
             lineHeight: 1.2,
           }}
         >
-          Acceso completo hoy por 17 USD
+          Accede hoy al sistema completo por solo 17 USD
         </h2>
+
+        {/* Pre-price label */}
+        <p
+          style={{
+            fontSize: "0.8rem",
+            color: "rgba(255,255,255,0.55)",
+            margin: "0 0 10px",
+            lineHeight: 1.5,
+            fontWeight: 400,
+            letterSpacing: "0.01em",
+          }}
+        >
+          Pago único. Acceso inmediato.
+        </p>
 
         {/* Large price */}
         <div style={{ marginBottom: "32px" }}>
@@ -1133,25 +1162,13 @@ function PrecioSection() {
           style={{
             fontSize: "0.8rem",
             color: "rgba(255,255,255,0.65)",
-            margin: "0 0 12px",
-            lineHeight: 1.5,
+            margin: "0",
+            lineHeight: 1.6,
             fontWeight: 400,
           }}
         >
-          Acceso inmediato • Garantía 7 días
-        </p>
-
-        {/* Trust line */}
-        <p
-          style={{
-            fontSize: "0.75rem",
-            color: "rgba(255,255,255,0.45)",
-            margin: 0,
-            lineHeight: 1.5,
-            fontWeight: 400,
-          }}
-        >
-          🔒 Pago seguro • SSL protegido
+          Acceso inmediato • Pago único • Garantía 7 días
+          <br />🔒 Pago seguro • Protección SSL
         </p>
       </div>
     </section>
