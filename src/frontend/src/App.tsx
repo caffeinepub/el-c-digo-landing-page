@@ -532,6 +532,26 @@ function ErrorSection() {
             </p>
           ))}
         </div>
+
+        {/* CTA after problem section */}
+        <div
+          style={{
+            marginTop: "clamp(32px, 5vw, 48px)",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div style={{ width: "100%", maxWidth: "480px" }}>
+            <CtaButton
+              large
+              fullWidth
+              data-ocid="error.primary_button"
+              onClick={scrollToPrecio}
+            >
+              ENTENDER EL PROTOCOLO
+            </CtaButton>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -669,6 +689,26 @@ function SolutionSection() {
             No al revés."
           </p>
         </blockquote>
+
+        {/* CTA after 4-step section */}
+        <div
+          style={{
+            marginTop: "clamp(32px, 5vw, 48px)",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div style={{ width: "100%", maxWidth: "480px" }}>
+            <CtaButton
+              large
+              fullWidth
+              data-ocid="solucion.primary_button"
+              onClick={scrollToPrecio}
+            >
+              QUIERO APLICAR ESTO
+            </CtaButton>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -915,10 +955,10 @@ function IncludesSection() {
           ))}
         </div>
 
-        {/* CTA #2 */}
+        {/* CTA — scrolls to pricing section */}
         <CtaBlock
           dataOcid="includes.primary_button"
-          onClick={openHotmart}
+          onClick={scrollToPrecio}
           label="QUIERO ACCEDER AHORA"
         />
       </div>
@@ -1145,7 +1185,7 @@ function PrecioSection() {
           </span>
         </div>
 
-        {/* CTA #3 — single button */}
+        {/* CTA #3 — single button — THIS IS THE ONLY CHECKOUT BUTTON */}
         <div style={{ width: "100%", maxWidth: "480px", marginBottom: "16px" }}>
           <CtaButton
             large
@@ -1379,9 +1419,9 @@ function FaqSection() {
           })}
         </div>
 
-        {/* CTA #4 — post-FAQ */}
+        {/* CTA #4 — post-FAQ — scrolls to pricing section */}
         <div style={{ marginTop: "3rem" }}>
-          <CtaBlock dataOcid="faq.primary_button" onClick={openHotmart} />
+          <CtaBlock dataOcid="faq.primary_button" onClick={scrollToPrecio} />
         </div>
       </div>
     </section>
