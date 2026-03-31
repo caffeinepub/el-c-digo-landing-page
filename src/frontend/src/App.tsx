@@ -148,10 +148,10 @@ function HeroSection() {
             letterSpacing: "-0.04em",
           }}
         >
-          No estás perdiendo tu situación{" "}
+          No la estás perdiendo{" "}
           <span style={{ color: "var(--brand-red)" }}>por falta de amor.</span>
           <br />
-          <span style={{ color: "#d4d4d4" }}>La estás perdiendo porque</span>{" "}
+          <span style={{ color: "#d4d4d4" }}>La estás perdiendo por cómo</span>{" "}
           <em
             style={{
               fontStyle: "italic",
@@ -174,9 +174,9 @@ function HeroSection() {
             fontWeight: 400,
           }}
         >
-          El sistema práctico para detener tu impulso{" "}
+          El problema no es lo que sientes.{" "}
           <strong style={{ color: "#b0b0b0", fontWeight: 600 }}>
-            antes de sabotear tu postura.
+            Es lo que haces cuando lo sientes.
           </strong>
         </p>
 
@@ -246,7 +246,7 @@ function VturbPlayer() {
 
 // ─── VIDEO CTA BLOCK — appears after first click on player + 3:55 wall-clock ──
 // Strategy: listen for first click/touch on the vturb element (or its container),
-// then start a 235-second wall-clock timer. Once elapsed, fade in the CTA block.
+// then start a 261-second wall-clock timer. Once elapsed, fade in the CTA block.
 function VideoCtaBlock({
   onContainerClick,
 }: {
@@ -263,7 +263,7 @@ function VideoCtaBlock({
     timerRef.current = setTimeout(() => {
       setVisible(true);
       requestAnimationFrame(() => setFadeIn(true));
-    }, 235000);
+    }, 261000);
   }, []);
 
   useEffect(() => {
