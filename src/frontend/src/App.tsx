@@ -1,6 +1,6 @@
 import { ArrowRight, Check, ChevronDown, Shield, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
 const HOTMART_URL = "https://pay.hotmart.com/S104758048Y?checkoutMode=10";
@@ -229,7 +229,7 @@ function VturbPlayer() {
     if (!existingScript) {
       const s = document.createElement("script");
       s.src =
-        "https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/ab-test/69cb28b62b2f7ad133a09773/player.js";
+        "https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";
       s.async = true;
       document.head.appendChild(s);
     }
@@ -238,146 +238,13 @@ function VturbPlayer() {
   return (
     // @ts-ignore — vturb-smartplayer is a custom element not in JSX types
     <vturb-smartplayer
-      id="ab-69cb28b62b2f7ad133a09773"
+      id="vid-69cb28db953ef32c144df9b8"
       style={{ display: "block", margin: "0 auto", width: "100%" }}
     />
   );
 }
 
-// ─── VIDEO CTA BLOCK — appears after first click on player + 3:55 wall-clock ──
-// Strategy: listen for first click/touch on the vturb element (or its container),
-// then start a 261-second wall-clock timer. Once elapsed, fade in the CTA block.
-function VideoCtaBlock({
-  onContainerClick,
-}: {
-  onContainerClick: (handler: () => void) => void;
-}) {
-  const [visible, setVisible] = useState(false);
-  const [fadeIn, setFadeIn] = useState(false);
-  const timerStartedRef = useRef(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const startTimer = useCallback(() => {
-    if (timerStartedRef.current) return;
-    timerStartedRef.current = true;
-    timerRef.current = setTimeout(() => {
-      setVisible(true);
-      requestAnimationFrame(() => setFadeIn(true));
-    }, 261000);
-  }, []);
-
-  useEffect(() => {
-    // Register the handler with the parent container
-    onContainerClick(startTimer);
-
-    // Also poll for the vturb element and attach click/touch listeners directly
-    let retries = 0;
-    let retryTimeout: ReturnType<typeof setTimeout> | null = null;
-
-    function attachToVturb() {
-      const el = document.getElementById("ab-69cb28b62b2f7ad133a09773");
-      if (el) {
-        el.addEventListener("click", startTimer, { once: true });
-        el.addEventListener("touchstart", startTimer, { once: true });
-        el.addEventListener("touchend", startTimer, { once: true });
-      } else if (retries < 30) {
-        retries++;
-        retryTimeout = setTimeout(attachToVturb, 300);
-      }
-    }
-
-    attachToVturb();
-
-    return () => {
-      if (retryTimeout) clearTimeout(retryTimeout);
-      if (timerRef.current) clearTimeout(timerRef.current);
-      const el = document.getElementById("ab-69cb28b62b2f7ad133a09773");
-      if (el) {
-        el.removeEventListener("click", startTimer);
-        el.removeEventListener("touchstart", startTimer);
-        el.removeEventListener("touchend", startTimer);
-      }
-    };
-  }, [onContainerClick, startTimer]);
-
-  if (!visible) {
-    return (
-      <div
-        style={{ height: 0, overflow: "hidden", margin: 0, padding: 0 }}
-        aria-hidden
-      />
-    );
-  }
-
-  return (
-    <div
-      style={{
-        marginTop: "28px",
-        marginBottom: "56px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        background: "transparent",
-        opacity: fadeIn ? 1 : 0,
-        transition: "opacity 0.8s ease",
-        pointerEvents: "auto",
-      }}
-      aria-hidden={!fadeIn}
-    >
-      {/* Button + microcopy — always together as one block */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          maxWidth: "480px",
-          gap: "0",
-        }}
-      >
-        {/* Button */}
-        <div style={{ width: "100%" }}>
-          <CtaButton
-            large
-            fullWidth
-            data-ocid="video.primary_button"
-            onClick={scrollToPrecio}
-          >
-            ACCEDER AL PROTOCOLO AHORA
-          </CtaButton>
-        </div>
-
-        {/* Microcopy — always shown with the button, never alone */}
-        <p
-          style={{
-            marginTop: "14px",
-            marginBottom: "0",
-            fontSize: "0.82rem",
-            color: "rgba(255,255,255,0.6)",
-            textAlign: "center",
-            lineHeight: 1.5,
-            fontWeight: 400,
-            letterSpacing: "0.01em",
-          }}
-        >
-          USD 17 • Acceso inmediato • Garantía de 7 días
-        </p>
-      </div>
-    </div>
-  );
-}
-
 function VideoSection() {
-  const ctaHandlerRef = useRef<(() => void) | null>(null);
-
-  function registerCtaHandler(handler: () => void) {
-    ctaHandlerRef.current = handler;
-  }
-
-  function handleContainerClick() {
-    ctaHandlerRef.current?.();
-  }
-
   return (
     <section
       id="video"
@@ -445,21 +312,15 @@ function VideoSection() {
         </div>
 
         {/* Vturb Video embed — primary focal point */}
-        {/* biome-ignore lint/a11y/useKeyWithClickEvents: video container click-to-start-timer */}
         <div
           style={{
             borderRadius: "12px",
             border: "1px solid #2a2a2a",
             overflow: "hidden",
-            cursor: "pointer",
           }}
-          onClick={handleContainerClick}
         >
           <VturbPlayer />
         </div>
-
-        {/* CTA below VSL — revealed after first click + 3:55 wall-clock */}
-        <VideoCtaBlock onContainerClick={registerCtaHandler} />
       </div>
     </section>
   );
@@ -1604,6 +1465,38 @@ function TrustFooter() {
 export default function App() {
   useEffect(() => {
     document.title = "El Código — Controla Tu Impulso";
+  }, []);
+
+  useEffect(() => {
+    const scrollToPrecioSection = () => {
+      const el = document.querySelector("#precio");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+
+    const handleHashChange = () => {
+      if (window.location.hash === "#precio") {
+        scrollToPrecioSection();
+      }
+    };
+
+    // Handle hash on initial load (e.g., when Vturb button redirects with full URL)
+    if (window.location.hash === "#precio") {
+      const tryScroll = (attempts = 0) => {
+        const el = document.querySelector("#precio");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        } else if (attempts < 20) {
+          setTimeout(() => tryScroll(attempts + 1), 150);
+        }
+      };
+      setTimeout(() => tryScroll(), 300);
+    }
+
+    // Handle hash changes without page reload (e.g., relative #precio links)
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
   return (
