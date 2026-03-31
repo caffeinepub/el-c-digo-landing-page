@@ -224,12 +224,12 @@ function HeroSection() {
 function VturbPlayer() {
   useEffect(() => {
     const existingScript = document.querySelector(
-      'script[src*="69c1d386fd3b575eb62b95ca"]',
+      'script[src*="69cb28b62b2f7ad133a09773"]',
     );
     if (!existingScript) {
       const s = document.createElement("script");
       s.src =
-        "https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69c1d386fd3b575eb62b95ca/v4/player.js";
+        "https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/ab-test/69cb28b62b2f7ad133a09773/player.js";
       s.async = true;
       document.head.appendChild(s);
     }
@@ -238,7 +238,7 @@ function VturbPlayer() {
   return (
     // @ts-ignore — vturb-smartplayer is a custom element not in JSX types
     <vturb-smartplayer
-      id="vid-69c1d386fd3b575eb62b95ca"
+      id="ab-69cb28b62b2f7ad133a09773"
       style={{ display: "block", margin: "0 auto", width: "100%" }}
     />
   );
@@ -275,7 +275,7 @@ function VideoCtaBlock({
     let retryTimeout: ReturnType<typeof setTimeout> | null = null;
 
     function attachToVturb() {
-      const el = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
+      const el = document.getElementById("ab-69cb28b62b2f7ad133a09773");
       if (el) {
         el.addEventListener("click", startTimer, { once: true });
         el.addEventListener("touchstart", startTimer, { once: true });
@@ -291,7 +291,7 @@ function VideoCtaBlock({
     return () => {
       if (retryTimeout) clearTimeout(retryTimeout);
       if (timerRef.current) clearTimeout(timerRef.current);
-      const el = document.getElementById("vid-69c1d386fd3b575eb62b95ca");
+      const el = document.getElementById("ab-69cb28b62b2f7ad133a09773");
       if (el) {
         el.removeEventListener("click", startTimer);
         el.removeEventListener("touchstart", startTimer);
