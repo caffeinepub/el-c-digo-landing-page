@@ -224,12 +224,12 @@ function HeroSection() {
 function VturbPlayer() {
   useEffect(() => {
     const existingScript = document.querySelector(
-      'script[src*="69cb28b62b2f7ad133a09773"]',
+      'script[src*="69cdd7004e1a825d71234e30"]',
     );
     if (!existingScript) {
       const s = document.createElement("script");
       s.src =
-        "https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";
+        "https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cdd7004e1a825d71234e30/v4/player.js";
       s.async = true;
       document.head.appendChild(s);
     }
@@ -238,7 +238,7 @@ function VturbPlayer() {
   return (
     // @ts-ignore — vturb-smartplayer is a custom element not in JSX types
     <vturb-smartplayer
-      id="vid-69cb28db953ef32c144df9b8"
+      id="vid-69cdd7004e1a825d71234e30"
       style={{ display: "block", margin: "0 auto", width: "100%" }}
     />
   );
