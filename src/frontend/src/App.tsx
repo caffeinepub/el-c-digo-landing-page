@@ -1,6 +1,7 @@
 import { ArrowRight, Check, ChevronDown, Shield, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import DownloadPage from "./DownloadPage";
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
 const HOTMART_URL = "https://pay.hotmart.com/S104758048Y?checkoutMode=10";
@@ -1487,6 +1488,10 @@ export default function App() {
     window.addEventListener("hashchange", handleHashChange);
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
+
+  if (window.location.pathname === "/descarga") {
+    return <DownloadPage />;
+  }
 
   return (
     <div style={{ background: "#0a0a0a", minHeight: "100vh" }}>
