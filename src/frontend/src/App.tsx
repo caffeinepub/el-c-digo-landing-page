@@ -180,7 +180,7 @@ function HeroSection() {
           </strong>
         </p>
 
-        {/* Bullet list — bottom spacing matches video section top */}
+        {/* Bullet list */}
         <ul
           style={{
             listStyle: "none",
@@ -224,12 +224,12 @@ function HeroSection() {
 function VturbPlayer() {
   useEffect(() => {
     const existingScript = document.querySelector(
-      'script[src*="69cdd7004e1a825d71234e30"]',
+      'script[src*="69cb28db953ef32c144df9b8"]',
     );
     if (!existingScript) {
       const s = document.createElement("script");
       s.src =
-        "https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cdd7004e1a825d71234e30/v4/player.js";
+        "https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";
       s.async = true;
       document.head.appendChild(s);
     }
@@ -238,7 +238,7 @@ function VturbPlayer() {
   return (
     // @ts-ignore — vturb-smartplayer is a custom element not in JSX types
     <vturb-smartplayer
-      id="vid-69cdd7004e1a825d71234e30"
+      id="vid-69cb28db953ef32c144df9b8"
       style={{ display: "block", margin: "0 auto", width: "100%" }}
     />
   );
@@ -255,7 +255,7 @@ function VideoSection() {
       }}
     >
       <div style={{ maxWidth: "700px", margin: "0 auto" }}>
-        {/* Video intro text — clear hierarchy, mobile-first */}
+        {/* Video intro text */}
         <div
           style={{
             textAlign: "center",
@@ -265,7 +265,6 @@ function VideoSection() {
             alignItems: "center",
           }}
         >
-          {/* Line 1 — most prominent */}
           <p
             style={{
               fontSize: "clamp(1.75rem, 5.5vw, 2.2rem)",
@@ -280,10 +279,8 @@ function VideoSection() {
             Mira esto hasta el final.
           </p>
 
-          {/* Spacer between line 1 and lines 2–3 */}
           <div style={{ height: "28px" }} />
 
-          {/* Lines 2–3 — smaller and visually lighter */}
           <p
             style={{
               fontSize: "clamp(1rem, 3vw, 1.15rem)",
@@ -311,7 +308,7 @@ function VideoSection() {
           </p>
         </div>
 
-        {/* Vturb Video embed — primary focal point */}
+        {/* Vturb Video embed */}
         <div
           style={{
             borderRadius: "12px",
@@ -626,7 +623,6 @@ function ProtocolSection() {
           El protocolo que usas en el momento exacto en que pierdes el control
         </p>
 
-        {/* Protocol container */}
         <div
           style={{
             border: "1px solid #2a2a2a",
@@ -650,7 +646,6 @@ function ProtocolSection() {
                 alignItems: "flex-start",
               }}
             >
-              {/* Minute badge */}
               <div
                 style={{
                   flexShrink: 0,
@@ -1060,7 +1055,7 @@ function PrecioSection() {
           Esto es lo que haces en el momento exacto en que pierdes el control.
         </p>
 
-        {/* CTA #3 — single button — THIS IS THE ONLY CHECKOUT BUTTON */}
+        {/* CTA — THIS IS THE ONLY CHECKOUT BUTTON */}
         <div style={{ width: "100%", maxWidth: "480px", marginBottom: "16px" }}>
           <CtaButton
             large
@@ -1102,7 +1097,6 @@ function GarantiaSection() {
       }}
     >
       <div style={{ maxWidth: "480px", margin: "0 auto" }}>
-        {/* Shield icon */}
         <div
           style={{
             display: "inline-flex",
@@ -1294,7 +1288,7 @@ function FaqSection() {
           })}
         </div>
 
-        {/* CTA #4 — post-FAQ — scrolls to pricing section */}
+        {/* CTA — post-FAQ — scrolls to pricing section */}
         <div style={{ marginTop: "3rem" }}>
           <CtaBlock dataOcid="faq.primary_button" onClick={scrollToPrecio} />
         </div>
@@ -1381,7 +1375,6 @@ function TrustFooter() {
         padding: "2rem 1.5rem 1.5rem",
       }}
     >
-      {/* Disclaimer */}
       <p
         style={{
           color: "#777",
@@ -1397,7 +1390,6 @@ function TrustFooter() {
         profesional.
       </p>
 
-      {/* Trust grid */}
       <div
         style={{
           display: "grid",
@@ -1436,7 +1428,6 @@ function TrustFooter() {
         ))}
       </div>
 
-      {/* Caffeine credit */}
       <p
         style={{
           color: "#444",
@@ -1481,7 +1472,6 @@ export default function App() {
       }
     };
 
-    // Handle hash on initial load (e.g., when Vturb button redirects with full URL)
     if (window.location.hash === "#precio") {
       const tryScroll = (attempts = 0) => {
         const el = document.querySelector("#precio");
@@ -1494,7 +1484,6 @@ export default function App() {
       setTimeout(() => tryScroll(), 300);
     }
 
-    // Handle hash changes without page reload (e.g., relative #precio links)
     window.addEventListener("hashchange", handleHashChange);
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
