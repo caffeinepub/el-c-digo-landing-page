@@ -49,6 +49,12 @@ const HTML_ELEMENTOR = `<style>
       <p style="font-size:clamp(1rem,3vw,1.15rem);color:rgba(255,255,255,.55);line-height:1.6;max-width:320px;margin-top:6px">y qu&#233; hacer exactamente en el momento en que ocurre.</p>
     </div>
     <div style="border-radius:12px;border:1px solid #2a2a2a;overflow:hidden">
+      <!-- ============================================================
+           PARTE 1 DO CÓDIGO VTURB — COLE AQUI A TAG <vturb-smartplayer>
+           Substitua o elemento abaixo pela tag fornecida pela Vturb.
+           Exemplo: <vturb-smartplayer id="vid-SEU-ID" style="display:block;margin:0 auto;width:100%"></vturb-smartplayer>
+           PARTE 2 (o script) vai separado no HFCM — Body End
+           ============================================================ -->
       <vturb-smartplayer id="vid-69cb28db953ef32c144df9b8" style="display:block;margin:0 auto;width:100%"></vturb-smartplayer>
     </div>
   </div>

@@ -78,6 +78,9 @@
 
   html {
     scroll-behavior: smooth;
+    background: #000000;
+    overflow-x: hidden;
+    max-width: 100%;
   }
 
   body {
@@ -89,6 +92,15 @@
     margin: 0;
     padding: 0;
     line-height: 1.6;
+    overflow-x: hidden;
+    max-width: 100%;
+    position: relative;
+  }
+
+  #root {
+    overflow-x: hidden;
+    max-width: 100%;
+    background: #0a0a0a;
   }
 
   h1, h2, h3, h4, h5, h6 {
