@@ -230,24 +230,40 @@ function HeroSection() {
 // ─── SECTION 2: VIDEO ─────────────────────────────────────────────────────────
 // ============================================================
 // VTURB — CONFIGURAÇÃO DO PLAYER
-// Para trocar o vídeo, substitua o ID nos 2 lugares abaixo
-// ID atual: 69cb28db953ef32c144df9b8
-// Você encontra o ID novo no painel da Vturb ao criar/editar o player.
-// ============================================================
-// ============================================================
-// VTURB — O script do player está carregado no index.html
-// Para trocar o vídeo, substitua o ID nos 2 lugares marcados
-// com "VTURB_PLAYER_ID" no index.html E no id abaixo.
-// ID atual: 69cb28db953ef32c144df9b8
+// Para trocar o vídeo, substitua o ID (vid-XXXXXXXX) nos 2 lugares abaixo
+// marcados com "VTURB_PLAYER_ID".
+// ID atual: vid-69cb28db953ef32c144df9b8
 // ============================================================
 function VturbPlayer() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // VTURB_PLAYER_ID (1/2): troque o ID do player abaixo se necessário
+    const PLAYER_ID = "vid-69cb28db953ef32c144df9b8";
+    const SCRIPT_SRC = `https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/${PLAYER_ID.replace("vid-", "")}/v4/player.js`;
+
+    if (!containerRef.current) return;
+
+    // Limpa o container antes de reinserir
+    containerRef.current.innerHTML = "";
+
+    // VTURB_PLAYER_ID (2/2): troque o id= abaixo para o novo ID se necessário
+    const tag = document.createElement("vturb-smartplayer");
+    tag.setAttribute("id", PLAYER_ID);
+    tag.style.cssText = "display:block;margin:0 auto;width:100%";
+    containerRef.current.appendChild(tag);
+
+    // Injeta o script dinamicamente para garantir que carregue após o elemento estar no DOM
+    if (!document.querySelector(`script[src="${SCRIPT_SRC}"]`)) {
+      const s = document.createElement("script");
+      s.src = SCRIPT_SRC;
+      s.async = true;
+      document.head.appendChild(s);
+    }
+  }, []);
+
   return (
-    // @ts-ignore — vturb-smartplayer is a custom element not in JSX types
-    // VTURB_PLAYER_TAG: troque o id abaixo para o novo ID do player (prefixo "vid-")
-    <vturb-smartplayer
-      id="vid-69cb28db953ef32c144df9b8"
-      style={{ display: "block", margin: "0 auto", width: "100%" }}
-    />
+    <div ref={containerRef} style={{ width: "100%", minHeight: "200px" }} />
   );
 }
 
