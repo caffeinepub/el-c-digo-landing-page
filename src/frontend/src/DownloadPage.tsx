@@ -50,7 +50,6 @@ const HTML_ELEMENTOR = `<style>
     </div>
     <div style="border-radius:12px;border:1px solid #2a2a2a;overflow:hidden">
       <vturb-smartplayer id="vid-69cb28db953ef32c144df9b8" style="display:block;margin:0 auto;width:100%"></vturb-smartplayer>
-      <script type="text/javascript">(function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";s.async=true;(document.head||document.body).appendChild(s);}());</script>
     </div>
   </div>
 </section>
@@ -174,9 +173,50 @@ function ecScrollToPrecio(){var el=document.getElementById('precio');if(el)el.sc
 function ecToggleFaq(btn){var a=btn.nextElementSibling,ic=btn.querySelector('.faq-icon'),open=a.classList.contains('ec-open');document.querySelectorAll('.faq-answer').forEach(function(x){x.classList.remove('ec-open')});document.querySelectorAll('.faq-icon').forEach(function(x){x.classList.remove('ec-open')});if(!open){a.classList.add('ec-open');ic.classList.add('ec-open')}}
 </script>`;
 
+const VTURB_SCRIPT = `var s=document.createElement("script");
+s.src="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";
+s.async=true;
+document.head.appendChild(s);`;
+
+const UTMIFY_SCRIPT = `window.pixelId = "69cefa70e08451417abc21bc";
+var a=document.createElement("script");
+a.setAttribute("async","");
+a.setAttribute("defer","");
+a.setAttribute("src","https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+document.head.appendChild(a);
+
+var b=document.createElement("script");
+b.setAttribute("async","");
+b.setAttribute("defer","");
+b.setAttribute("src","https://cdn.utmify.com.br/scripts/utms/latest.js");
+document.head.appendChild(b);`;
+
+const smallBtnBase: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontWeight: 700,
+  fontSize: "0.82rem",
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  padding: "0.55rem 1.25rem",
+  minHeight: "36px",
+  borderRadius: "5px",
+  border: "none",
+  cursor: "pointer",
+  marginTop: "0.6rem",
+  transition: "background 0.2s",
+  color: "#fff",
+};
+
 export default function DownloadPage() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const vturbRef = useRef<HTMLTextAreaElement>(null);
+  const utmifyRef = useRef<HTMLTextAreaElement>(null);
+
   const [copied, setCopied] = useState(false);
+  const [vturbCopied, setVturbCopied] = useState(false);
+  const [utmifyCopied, setUtmifyCopied] = useState(false);
 
   function handleCopy() {
     const ta = textareaRef.current;
@@ -187,6 +227,34 @@ export default function DownloadPage() {
       document.execCommand("copy");
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // fallback
+    }
+  }
+
+  function handleVturbCopy() {
+    const ta = vturbRef.current;
+    if (!ta) return;
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand("copy");
+      setVturbCopied(true);
+      setTimeout(() => setVturbCopied(false), 2500);
+    } catch {
+      // fallback
+    }
+  }
+
+  function handleUtmifyCopy() {
+    const ta = utmifyRef.current;
+    if (!ta) return;
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand("copy");
+      setUtmifyCopied(true);
+      setTimeout(() => setUtmifyCopied(false), 2500);
     } catch {
       // fallback
     }
@@ -305,13 +373,13 @@ export default function DownloadPage() {
               <strong style={{ color: "#fff" }}>
                 Script do v&#237;deo (Vturb):
               </strong>{" "}
-              Se o v&#237;deo n&#227;o aparecer, adicione o script do Vturb{" "}
-              tamb&#233;m via <strong style={{ color: "#fff" }}>WPCode</strong>{" "}
-              no header — o Elementor pode bloquear scripts inline
+              Adicione via HFCM — crie um snippet JavaScript com o c&#243;digo
+              abaixo, Location:{" "}
+              <strong style={{ color: "#fff" }}>Body End</strong>
             </li>
             <li>
-              Os scripts de tracking (UTMify, pixel) adicione separado via
-              WPCode no header do WordPress
+              Scripts de tracking (UTMify, pixel): Adicione separado via HFCM,{" "}
+              Location: <strong style={{ color: "#fff" }}>Header</strong>
             </li>
           </ol>
         </div>
@@ -338,7 +406,7 @@ export default function DownloadPage() {
             transition: "background 0.2s",
           }}
         >
-          {copied ? "&#10003; COPIADO!" : "COPIAR C\u00D3DIGO"}
+          {copied ? "\u2713 COPIADO!" : "COPIAR C\u00D3DIGO"}
         </button>
 
         <textarea
@@ -394,8 +462,7 @@ export default function DownloadPage() {
               marginBottom: "0.5rem",
             }}
           >
-            &#128249; Script do v&#237;deo Vturb — adicione via WPCode se o
-            v&#237;deo n&#227;o aparecer
+            &#128249; Script Vturb para HFCM — cole como snippet JavaScript
           </p>
           <p
             style={{
@@ -405,17 +472,18 @@ export default function DownloadPage() {
               marginBottom: "0.75rem",
             }}
           >
-            Se o v&#237;deo n&#227;o carregar no Elementor, cole este script no
-            WPCode (ou qualquer plugin de inject&#227;o de scripts) no{" "}
-            <strong style={{ color: "#ccc" }}>&lt;head&gt;</strong> ou{" "}
-            <strong style={{ color: "#ccc" }}>Body start</strong> do WordPress:
+            No HFCM, crie um novo snippet com as configura&#231;&#245;es abaixo.
+            O script deve ser do tipo{" "}
+            <strong style={{ color: "#ccc" }}>JavaScript</strong>, Location:{" "}
+            <strong style={{ color: "#ccc" }}>Body End</strong>:
           </p>
           <textarea
+            ref={vturbRef}
             readOnly
-            value={`<script type="text/javascript">(function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";s.async=true;(document.head||document.body).appendChild(s);}());</script>`}
+            value={VTURB_SCRIPT}
             style={{
               width: "100%",
-              height: "100px",
+              height: "120px",
               background: "#0d0d0d",
               border: "1px solid #2a2a2a",
               borderRadius: "6px",
@@ -430,6 +498,81 @@ export default function DownloadPage() {
               outline: "none",
             }}
           />
+          <button
+            type="button"
+            onClick={handleVturbCopy}
+            style={{
+              ...smallBtnBase,
+              background: vturbCopied ? "#16a34a" : "#333",
+            }}
+          >
+            {vturbCopied ? "\u2713 COPIADO!" : "COPIAR"}
+          </button>
+        </div>
+
+        {/* UTMify Script Block */}
+        <div
+          style={{
+            marginTop: "1.5rem",
+            background: "#0a0a0a",
+            border: "1px solid #444",
+            borderRadius: "8px",
+            padding: "1.25rem",
+          }}
+        >
+          <p
+            style={{
+              color: "#fff",
+              fontWeight: 700,
+              fontSize: "0.95rem",
+              marginBottom: "0.5rem",
+            }}
+          >
+            &#128202; Scripts UTMify para HFCM — cole como snippet JavaScript
+          </p>
+          <p
+            style={{
+              color: "#888",
+              fontSize: "0.85rem",
+              lineHeight: 1.7,
+              marginBottom: "0.75rem",
+            }}
+          >
+            No HFCM, crie outro snippet, Location:{" "}
+            <strong style={{ color: "#ccc" }}>Header</strong>, tipo{" "}
+            <strong style={{ color: "#ccc" }}>JavaScript</strong>:
+          </p>
+          <textarea
+            ref={utmifyRef}
+            readOnly
+            value={UTMIFY_SCRIPT}
+            style={{
+              width: "100%",
+              height: "180px",
+              background: "#0d0d0d",
+              border: "1px solid #2a2a2a",
+              borderRadius: "6px",
+              color: "#c8c8c8",
+              fontFamily: "monospace",
+              fontSize: "0.75rem",
+              lineHeight: 1.5,
+              padding: "0.75rem",
+              resize: "none",
+              display: "block",
+              boxSizing: "border-box",
+              outline: "none",
+            }}
+          />
+          <button
+            type="button"
+            onClick={handleUtmifyCopy}
+            style={{
+              ...smallBtnBase,
+              background: utmifyCopied ? "#16a34a" : "#333",
+            }}
+          >
+            {utmifyCopied ? "\u2713 COPIADO!" : "COPIAR"}
+          </button>
         </div>
       </div>
     </div>
