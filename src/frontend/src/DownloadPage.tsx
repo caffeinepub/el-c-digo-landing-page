@@ -50,7 +50,7 @@ const HTML_ELEMENTOR = `<style>
     </div>
     <div style="border-radius:12px;border:1px solid #2a2a2a;overflow:hidden">
       <vturb-smartplayer id="vid-69cb28db953ef32c144df9b8" style="display:block;margin:0 auto;width:100%"></vturb-smartplayer>
-      <script>var s=document.createElement("script");s.src="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";s.async=true;document.head.appendChild(s);</script>
+      <script type="text/javascript">(function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";s.async=true;(document.head||document.body).appendChild(s);}());</script>
     </div>
   </div>
 </section>
@@ -300,10 +300,18 @@ export default function DownloadPage() {
               No Elementor, arraste um widget{" "}
               <strong style={{ color: "#fff" }}>HTML</strong> para a p&#225;gina
             </li>
-            <li>Cole o c&#243;digo no campo do widget</li>
+            <li>Cole o c&#243;digo no campo do widget e salve</li>
             <li>
-              Os scripts de tracking (UTMify, pixel) voc&#234; adiciona separado
-              via WPCode no header do WordPress
+              <strong style={{ color: "#fff" }}>
+                Script do v&#237;deo (Vturb):
+              </strong>{" "}
+              Se o v&#237;deo n&#227;o aparecer, adicione o script do Vturb{" "}
+              tamb&#233;m via <strong style={{ color: "#fff" }}>WPCode</strong>{" "}
+              no header — o Elementor pode bloquear scripts inline
+            </li>
+            <li>
+              Os scripts de tracking (UTMify, pixel) adicione separado via
+              WPCode no header do WordPress
             </li>
           </ol>
         </div>
@@ -367,6 +375,62 @@ export default function DownloadPage() {
           <strong style={{ color: "#666" }}>Ctrl+A</strong> dentro do campo e
           depois <strong style={{ color: "#666" }}>Ctrl+C</strong>.
         </p>
+
+        {/* Vturb Script Block */}
+        <div
+          style={{
+            marginTop: "2.5rem",
+            background: "#0a0a0a",
+            border: "1px solid #444",
+            borderRadius: "8px",
+            padding: "1.25rem",
+          }}
+        >
+          <p
+            style={{
+              color: "#fff",
+              fontWeight: 700,
+              fontSize: "0.95rem",
+              marginBottom: "0.5rem",
+            }}
+          >
+            &#128249; Script do v&#237;deo Vturb — adicione via WPCode se o
+            v&#237;deo n&#227;o aparecer
+          </p>
+          <p
+            style={{
+              color: "#888",
+              fontSize: "0.85rem",
+              lineHeight: 1.7,
+              marginBottom: "0.75rem",
+            }}
+          >
+            Se o v&#237;deo n&#227;o carregar no Elementor, cole este script no
+            WPCode (ou qualquer plugin de inject&#227;o de scripts) no{" "}
+            <strong style={{ color: "#ccc" }}>&lt;head&gt;</strong> ou{" "}
+            <strong style={{ color: "#ccc" }}>Body start</strong> do WordPress:
+          </p>
+          <textarea
+            readOnly
+            value={`<script type="text/javascript">(function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";s.async=true;(document.head||document.body).appendChild(s);}());</script>`}
+            style={{
+              width: "100%",
+              height: "100px",
+              background: "#0d0d0d",
+              border: "1px solid #2a2a2a",
+              borderRadius: "6px",
+              color: "#c8c8c8",
+              fontFamily: "monospace",
+              fontSize: "0.75rem",
+              lineHeight: 1.5,
+              padding: "0.75rem",
+              resize: "none",
+              display: "block",
+              boxSizing: "border-box",
+              outline: "none",
+            }}
+          />
+        </div>
       </div>
     </div>
   );
