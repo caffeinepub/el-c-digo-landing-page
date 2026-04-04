@@ -33,6 +33,10 @@ const HTML_CONTENT = `<!DOCTYPE html>
     .faq-answer{color:#888;padding-bottom:1.25rem;line-height:1.8;font-size:.93rem;display:none}
     .faq-answer.open{display:block}
   <\/style>
+  <!-- ============================================================
+       ADICIONE AQUI OS SCRIPTS DE TRACKING (UTMify, Pixel, etc.)
+       Cole os seus scripts de rastreamento nesta area do <head>.
+       ============================================================ -->
 <\/head>
 <body>
 <div style="background:#000;min-height:100vh">
@@ -60,6 +64,11 @@ const HTML_CONTENT = `<!DOCTYPE html>
       <p style="font-size:clamp(1rem,3vw,1.15rem);color:rgba(255,255,255,.55);line-height:1.6;max-width:320px;margin-top:6px">y qué hacer exactamente en el momento en que ocurre.<\/p>
     <\/div>
     <div style="border-radius:12px;border:1px solid #2a2a2a;overflow:hidden">
+      <!-- ============================================================
+           SUBSTITUA AQUI O CODIGO DA VTURB
+           Cole abaixo o codigo completo do seu player Vturb.
+           Apague este comentario e o codigo atual e cole o novo.
+           ============================================================ -->
       <vturb-smartplayer id="vid-69cb28db953ef32c144df9b8" style="display:block;margin:0 auto;width:100%"><\/vturb-smartplayer>
       <script>var s=document.createElement("script");s.src="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";s.async=true;document.head.appendChild(s);<\/script>
     <\/div>
@@ -165,6 +174,9 @@ const HTML_CONTENT = `<!DOCTYPE html>
   <\/div>
 <\/section>
 <footer style="background:#0a0a0a;border-top:1px solid #1e1e1e;padding:2rem 1.5rem 1.5rem">
+  <!-- ============================================================
+       RODAPE: Edite aqui o nome do dominio, email e ano.
+       ============================================================ -->
   <p style="color:#777;font-size:.78rem;text-align:center;line-height:1.6;max-width:540px;margin:0 auto 1.5rem">Este contenido es educativo. No reemplaza terapia ni asesoría profesional.<\/p>
   <p style="color:#444;font-size:.75rem;text-align:center;margin-top:1.5rem;border-top:1px solid #1e1e1e;padding-top:1.5rem">© 2025 El Código. Todos los derechos reservados.<\/p>
 <\/footer>
