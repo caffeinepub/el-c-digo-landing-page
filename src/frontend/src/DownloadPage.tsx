@@ -2,24 +2,18 @@ import { useRef, useState } from "react";
 
 // ─── CÓDIGO PARA ELEMENTOR ────────────────────────────────────────────────────
 // Sem <html>, <head>, <body> — vai direto no widget HTML do Elementor
-// Sem scripts — Vturb via HFCM, UTMify você adiciona manualmente onde indicado
+// O script do Vturb já está incluído no final deste bloco.
+// O UTMify você adiciona manualmente no <head> do WordPress (HFCM ou WPCode).
 const ELEMENTOR_CONTENT = `<!-- =================================================================
      INSTRUÇÕES DE USO — LEIA ANTES DE COLAR
 
      1. Cole este código inteiro no widget HTML do Elementor.
 
-     2. SCRIPT VTURB — adicione via HFCM (Header ou Before </body>):
-
-        <script type="text/javascript">
-          var s=document.createElement("script");
-          s.src="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";
-          s.async=true;
-          document.head.appendChild(s);
-        </script>
-
-        Para trocar o video: substitua o ID "69cb28db953ef32c144df9b8"
-        tanto na URL do script acima quanto no atributo id da tag
-        <vturb-smartplayer> na seção VIDEO mais abaixo.
+     2. SCRIPT VTURB — já está incluído no final deste bloco (linha final).
+        Para trocar o vídeo: substitua as 2 ocorrências do ID:
+          ID atual: 69cb28db953ef32c144df9b8
+        • No atributo id da tag <vturb-smartplayer> na seção VÍDEO abaixo.
+        • Na URL do <script> src no final deste arquivo.
 
      3. SCRIPTS UTMIFY — adicione manualmente no <head> do WordPress
         (via HFCM, WPCode ou nas configurações do tema):
@@ -82,11 +76,8 @@ const ELEMENTOR_CONTENT = `<!-- ================================================
 
 <!-- ═══════════════════════════════════════════════════
      VÍDEO (Vturb)
-     O <vturb-smartplayer> é renderizado aqui.
-     O SCRIPT do player deve ser adicionado via HFCM
-     (veja instruções no topo deste arquivo).
-     Para trocar o vídeo: substitua o ID abaixo:
      ID atual: vid-69cb28db953ef32c144df9b8
+     Para trocar: substitua o ID acima E no <script> no final deste arquivo.
 ══════════════════════════════════════════════════════ -->
 <section id="video" style="background:#000;padding:0 1.5rem;text-align:center">
   <div style="max-width:700px;margin:0 auto">
@@ -97,6 +88,7 @@ const ELEMENTOR_CONTENT = `<!-- ================================================
       <p style="font-size:clamp(1rem,3vw,1.15rem);color:rgba(255,255,255,.55);line-height:1.6;max-width:320px;margin-top:6px">y qu&#233; hacer exactamente en el momento en que ocurre.</p>
     </div>
     <div style="border-radius:12px;border:1px solid #2a2a2a;overflow:hidden">
+      <!-- VTURB PLAYER TAG — ID atual: vid-69cb28db953ef32c144df9b8 -->
       <vturb-smartplayer id="vid-69cb28db953ef32c144df9b8" style="display:block;margin:0 auto;width:100%"></vturb-smartplayer>
     </div>
   </div>
@@ -276,10 +268,23 @@ const ELEMENTOR_CONTENT = `<!-- ================================================
 </footer>
 
 <!-- JAVASCRIPT: accordion FAQ e scroll suave para #precio -->
-<!-- Estes scripts funcionam dentro do widget HTML do Elementor -->
 <script>
 function ecScrollToPrecio(){var el=document.getElementById('precio');if(el)el.scrollIntoView({behavior:'smooth'})}
 function ecToggleFaq(btn){var a=btn.nextElementSibling,ic=btn.querySelector('.faq-icon'),open=a.classList.contains('ec-open');document.querySelectorAll('.faq-answer').forEach(function(x){x.classList.remove('ec-open')});document.querySelectorAll('.faq-icon').forEach(function(x){x.classList.remove('ec-open')});if(!open){a.classList.add('ec-open');ic.classList.add('ec-open')}}
+</script>
+
+<!-- ═══════════════════════════════════════════════════════
+     VTURB — SCRIPT DO PLAYER
+     Para trocar o vídeo: substitua o ID abaixo E no <vturb-smartplayer> acima.
+     ID atual: 69cb28db953ef32c144df9b8
+     URL completa do script:
+     https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js
+══════════════════════════════════════════════════════════ -->
+<script type="text/javascript">
+var s=document.createElement("script");
+s.src="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";
+s.async=true;
+document.head.appendChild(s);
 </script>
 
 </div>`;
@@ -332,9 +337,11 @@ export default function DownloadPage() {
             lineHeight: 1.7,
           }}
         >
-          Copie e cole diretamente no widget HTML do Elementor.{" "}
-          <strong style={{ color: "#aaa" }}>Sem scripts.</strong> O Vturb vai
-          via HFCM. O UTMify voc&#234; adiciona manualmente no{" "}
+          Cole este c&#243;digo diretamente no widget HTML do Elementor.{" "}
+          <strong style={{ color: "#aaa" }}>
+            O script do Vturb j&#225; est&#225; incluído no final do bloco.
+          </strong>{" "}
+          O UTMify voc&#234; adiciona manualmente no{" "}
           <code style={{ color: "#aaa" }}>&lt;head&gt;</code> do WordPress (HFCM
           ou WPCode).
         </p>
@@ -357,17 +364,34 @@ export default function DownloadPage() {
           </p>
           <p>
             <span style={{ color: "#C1121F", fontWeight: 700 }}>1.</span> Cole
-            este c&#243;digo no widget HTML do Elementor.
+            este c&#243;digo no widget HTML do Elementor. O Vturb j&#225;
+            est&#225; no final do bloco — sem HFCM.
           </p>
           <p>
-            <span style={{ color: "#C1121F", fontWeight: 700 }}>2.</span> No
-            HFCM, crie um snippet com o script do Vturb (est&#225; comentado
-            dentro do c&#243;digo, na se&#231;&#227;o de instru&#231;&#245;es).
+            <span style={{ color: "#C1121F", fontWeight: 700 }}>2.</span> Para
+            trocar o v&#237;deo: substitua o ID{" "}
+            <code style={{ color: "#888", fontSize: "0.8rem" }}>
+              69cb28db953ef32c144df9b8
+            </code>{" "}
+            em 2 lugares: na tag{" "}
+            <code style={{ color: "#888", fontSize: "0.8rem" }}>
+              &lt;vturb-smartplayer&gt;
+            </code>{" "}
+            e no{" "}
+            <code style={{ color: "#888", fontSize: "0.8rem" }}>
+              &lt;script&gt;
+            </code>{" "}
+            no final.
           </p>
           <p>
-            <span style={{ color: "#C1121F", fontWeight: 700 }}>3.</span> No
-            HFCM, crie outro snippet com os scripts do UTMify (tamb&#233;m
-            comentados dentro do c&#243;digo).
+            <span style={{ color: "#C1121F", fontWeight: 700 }}>3.</span> Os
+            scripts do UTMify ficam fora deste bloco — adicione via HFCM ou
+            WPCode no{" "}
+            <code style={{ color: "#888", fontSize: "0.8rem" }}>
+              &lt;head&gt;
+            </code>{" "}
+            do WordPress (c&#243;digos comentados dentro do bloco para
+            refer&#234;ncia).
           </p>
           <p style={{ marginTop: "0.5rem", color: "#555", fontSize: "0.8rem" }}>
             Dica: fa&#231;a Ctrl+A dentro da caixa de texto e depois Ctrl+C para
