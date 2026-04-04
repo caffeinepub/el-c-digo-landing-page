@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import DownloadPage from "./DownloadPage";
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
+// ⬇️ LINK DO CHECKOUT DA HOTMART — EDITE AQUI PARA TROCAR O LINK DE COMPRA ⬇️
 const HOTMART_URL = "https://pay.hotmart.com/S104758048Y?checkoutMode=10";
+// ⬆️ FIM DO LINK DO CHECKOUT DA HOTMART ⬆️
 
 function openHotmart() {
   window.location.href = HOTMART_URL;
@@ -54,6 +56,8 @@ function CtaButton({
         transition: "background-color 0.18s",
         position: "relative" as const,
         overflow: "hidden" as const,
+        WebkitTapHighlightColor: "transparent",
+        touchAction: "manipulation",
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget as HTMLButtonElement;
@@ -189,6 +193,8 @@ function HeroSection() {
             margin: "0 auto 0",
             textAlign: "left",
             display: "inline-block",
+            maxWidth: "100%",
+            width: "100%",
             paddingBottom: "48px",
           }}
         >
@@ -222,13 +228,21 @@ function HeroSection() {
 }
 
 // ─── SECTION 2: VIDEO ─────────────────────────────────────────────────────────
+// ============================================================
+// VTURB — CONFIGURAÇÃO DO PLAYER
+// Para trocar o vídeo, substitua o ID nos 2 lugares abaixo
+// ID atual: 69cb28db953ef32c144df9b8
+// Você encontra o ID novo no painel da Vturb ao criar/editar o player.
+// ============================================================
 function VturbPlayer() {
   useEffect(() => {
+    // VTURB_PLAYER_ID (1/2): detecta se o script já foi carregado
     const existingScript = document.querySelector(
       'script[src*="69cb28db953ef32c144df9b8"]',
     );
     if (!existingScript) {
       const s = document.createElement("script");
+      // VTURB_PLAYER_ID (2/2): URL do script do player — troque o ID aqui
       s.src =
         "https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";
       s.async = true;
@@ -238,6 +252,7 @@ function VturbPlayer() {
 
   return (
     // @ts-ignore — vturb-smartplayer is a custom element not in JSX types
+    // VTURB_PLAYER_TAG: troque o id abaixo para o novo ID do player (prefixo "vid-")
     <vturb-smartplayer
       id="vid-69cb28db953ef32c144df9b8"
       style={{ display: "block", margin: "0 auto", width: "100%" }}
@@ -255,7 +270,7 @@ function VideoSection() {
         textAlign: "center",
       }}
     >
-      <div style={{ maxWidth: "700px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "700px", margin: "0 auto", width: "100%" }}>
         {/* Video intro text */}
         <div
           style={{
@@ -470,7 +485,8 @@ function SolutionSection() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
             gap: "1.25rem",
             marginBottom: "3rem",
           }}
@@ -862,7 +878,8 @@ function ForWhoSection() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
             gap: "1.5rem",
           }}
         >
@@ -1056,7 +1073,10 @@ function PrecioSection() {
           Esto es lo que haces en el momento exacto en que pierdes el control.
         </p>
 
-        {/* CTA — THIS IS THE ONLY CHECKOUT BUTTON */}
+        {/* ⬇️ BOTÃO DE CHECKOUT — CLICA E VAI PARA O HOTMART ⬇️
+            Para trocar o link, edite a constante HOTMART_URL no topo deste arquivo.
+            O link atual aponta para: https://pay.hotmart.com/S104758048Y?checkoutMode=10
+        */}
         <div style={{ width: "100%", maxWidth: "480px", marginBottom: "16px" }}>
           <CtaButton
             large
@@ -1067,6 +1087,7 @@ function PrecioSection() {
             ACCEDER AHORA
           </CtaButton>
         </div>
+        {/* ⬆️ FIM DO BOTÃO DE CHECKOUT ⬆️ */}
 
         {/* Microcopy — ONLY in this section */}
         <p
@@ -1232,6 +1253,8 @@ function FaqSection() {
                     cursor: "pointer",
                     textAlign: "left",
                     gap: "1rem",
+                    WebkitTapHighlightColor: "transparent",
+                    touchAction: "manipulation",
                   }}
                 >
                   <span
@@ -1394,7 +1417,8 @@ function TrustFooter() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(min(100%, 220px), 1fr))",
           gap: "1rem 2rem",
           maxWidth: "860px",
           margin: "0 auto 1.5rem",
@@ -1496,10 +1520,11 @@ export default function App() {
   return (
     <div
       style={{
-        background: "#0a0a0a",
-        minHeight: "100vh",
+        background: "#000000",
+        backgroundColor: "#000000",
+        minHeight: "100dvh",
         overflowX: "hidden",
-        maxWidth: "100%",
+        width: "100%",
         position: "relative",
       }}
     >
