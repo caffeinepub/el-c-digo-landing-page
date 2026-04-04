@@ -234,22 +234,13 @@ function HeroSection() {
 // ID atual: 69cb28db953ef32c144df9b8
 // Você encontra o ID novo no painel da Vturb ao criar/editar o player.
 // ============================================================
+// ============================================================
+// VTURB — O script do player está carregado no index.html
+// Para trocar o vídeo, substitua o ID nos 2 lugares marcados
+// com "VTURB_PLAYER_ID" no index.html E no id abaixo.
+// ID atual: 69cb28db953ef32c144df9b8
+// ============================================================
 function VturbPlayer() {
-  useEffect(() => {
-    // VTURB_PLAYER_ID (1/2): detecta se o script já foi carregado
-    const existingScript = document.querySelector(
-      'script[src*="69cb28db953ef32c144df9b8"]',
-    );
-    if (!existingScript) {
-      const s = document.createElement("script");
-      // VTURB_PLAYER_ID (2/2): URL do script do player — troque o ID aqui
-      s.src =
-        "https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";
-      s.async = true;
-      document.head.appendChild(s);
-    }
-  }, []);
-
   return (
     // @ts-ignore — vturb-smartplayer is a custom element not in JSX types
     // VTURB_PLAYER_TAG: troque o id abaixo para o novo ID do player (prefixo "vid-")

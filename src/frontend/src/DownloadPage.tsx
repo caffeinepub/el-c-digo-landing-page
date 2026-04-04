@@ -1,40 +1,24 @@
 import { useRef, useState } from "react";
 
 // ─── CÓDIGO PARA ELEMENTOR ────────────────────────────────────────────────────
-// Sem <html>, <head>, <body> — vai direto no widget HTML do Elementor
+// Sem <html>, <head>, <body> — vai direto no widget HTML do Elementor.
 // O script do Vturb já está incluído no final deste bloco.
-// O UTMify você adiciona manualmente no <head> do WordPress (HFCM ou WPCode).
-const ELEMENTOR_CONTENT = `<!-- =================================================================
+const ELEMENTOR_CONTENT =
+  `<!-- =================================================================
      INSTRUÇÕES DE USO — LEIA ANTES DE COLAR
 
      1. Cole este código inteiro no widget HTML do Elementor.
 
-     2. SCRIPT VTURB — já está incluído no final deste bloco (linha final).
+     2. SCRIPT VTURB — já está incluído no final deste bloco.
         Para trocar o vídeo: substitua as 2 ocorrências do ID:
           ID atual: 69cb28db953ef32c144df9b8
         • No atributo id da tag <vturb-smartplayer> na seção VÍDEO abaixo.
         • Na URL do <script> src no final deste arquivo.
 
-     3. SCRIPTS UTMIFY — adicione manualmente no <head> do WordPress
-        (via HFCM, WPCode ou nas configurações do tema):
-
-        Script 1 — UTMify Pixel:
-        <script>
-          window.pixelId = "69cefa70e08451417abc21bc";
-          var a=document.createElement("script");
-          a.setAttribute("async","");
-          a.setAttribute("defer","");
-          a.setAttribute("src","https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-          document.head.appendChild(a);
-        </script>
-
-        Script 2 — UTMify UTM Tracker:
-        <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-subids async defer></script>
-
-     4. BOTÃO DE COMPRA: aponta para https://pay.hotmart.com/S104758048Y?checkoutMode=10
+     3. BOTÃO DE COMPRA: aponta para https://pay.hotmart.com/S104758048Y?checkoutMode=10
         Para trocar: busque "hotmart" neste arquivo e edite a URL.
 
-     5. FOOTER: edite o texto de copyright no final deste arquivo.
+     4. FOOTER: edite o texto de copyright no final deste arquivo.
 ================================================================= -->
 
 <style>
@@ -77,7 +61,7 @@ const ELEMENTOR_CONTENT = `<!-- ================================================
 <!-- ═══════════════════════════════════════════════════
      VÍDEO (Vturb)
      ID atual: vid-69cb28db953ef32c144df9b8
-     Para trocar: substitua o ID acima E no <script> no final deste arquivo.
+     Para trocar: substitua o ID aqui E no <script> no final deste arquivo.
 ══════════════════════════════════════════════════════ -->
 <section id="video" style="background:#000;padding:0 1.5rem;text-align:center">
   <div style="max-width:700px;margin:0 auto">
@@ -174,7 +158,6 @@ const ELEMENTOR_CONTENT = `<!-- ================================================
   <div style="max-width:860px;margin:0 auto">
     <h2 style="font-size:clamp(1.4rem,3.5vw,2rem);font-weight:800;color:#fff;margin-bottom:2.5rem;text-align:center">&#191;Este sistema es para ti?</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem">
-      <!-- Card: Para quién ES -->
       <div style="border:1px solid #2a2a2a;background:#0a0a0a;border-radius:12px;padding:2rem">
         <h3 style="font-weight:800;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:#22c55e;margin-bottom:1.5rem">&#10003; Para qui&#233;n es</h3>
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.85rem">
@@ -184,7 +167,6 @@ const ELEMENTOR_CONTENT = `<!-- ================================================
           <li style="display:flex;gap:.75rem;align-items:flex-start;color:#c8c8c8;font-size:.93rem;line-height:1.6"><span style="color:#22c55e;flex-shrink:0;margin-top:3px">&#10003;</span>Para quien quiere responder desde la calma, no desde el miedo</li>
         </ul>
       </div>
-      <!-- Card: Para quién NO es -->
       <div style="border:1px solid #2a2a2a;background:#0a0a0a;border-radius:12px;padding:2rem">
         <h3 style="font-weight:800;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:#C1121F;margin-bottom:1.5rem">&#10007; Para qui&#233;n no es</h3>
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.85rem">
@@ -271,21 +253,21 @@ const ELEMENTOR_CONTENT = `<!-- ================================================
 <script>
 function ecScrollToPrecio(){var el=document.getElementById('precio');if(el)el.scrollIntoView({behavior:'smooth'})}
 function ecToggleFaq(btn){var a=btn.nextElementSibling,ic=btn.querySelector('.faq-icon'),open=a.classList.contains('ec-open');document.querySelectorAll('.faq-answer').forEach(function(x){x.classList.remove('ec-open')});document.querySelectorAll('.faq-icon').forEach(function(x){x.classList.remove('ec-open')});if(!open){a.classList.add('ec-open');ic.classList.add('ec-open')}}
-</script>
+</scr` +
+  `ipt>
 
 <!-- ═══════════════════════════════════════════════════════
      VTURB — SCRIPT DO PLAYER
      Para trocar o vídeo: substitua o ID abaixo E no <vturb-smartplayer> acima.
      ID atual: 69cb28db953ef32c144df9b8
-     URL completa do script:
-     https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js
 ══════════════════════════════════════════════════════════ -->
 <script type="text/javascript">
 var s=document.createElement("script");
 s.src="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";
 s.async=true;
 document.head.appendChild(s);
-</script>
+</scr` +
+  `ipt>
 
 </div>`;
 
@@ -339,14 +321,10 @@ export default function DownloadPage() {
         >
           Cole este c&#243;digo diretamente no widget HTML do Elementor.{" "}
           <strong style={{ color: "#aaa" }}>
-            O script do Vturb j&#225; est&#225; incluído no final do bloco.
-          </strong>{" "}
-          O UTMify voc&#234; adiciona manualmente no{" "}
-          <code style={{ color: "#aaa" }}>&lt;head&gt;</code> do WordPress (HFCM
-          ou WPCode).
+            O script do Vturb j&#225; est&#225; inclu&#237;do no final do bloco.
+          </strong>
         </p>
 
-        {/* Instruções resumidas */}
         <div
           style={{
             background: "#0a0a0a",
@@ -365,7 +343,7 @@ export default function DownloadPage() {
           <p>
             <span style={{ color: "#C1121F", fontWeight: 700 }}>1.</span> Cole
             este c&#243;digo no widget HTML do Elementor. O Vturb j&#225;
-            est&#225; no final do bloco — sem HFCM.
+            est&#225; no final do bloco.
           </p>
           <p>
             <span style={{ color: "#C1121F", fontWeight: 700 }}>2.</span> Para
@@ -384,22 +362,17 @@ export default function DownloadPage() {
             no final.
           </p>
           <p>
-            <span style={{ color: "#C1121F", fontWeight: 700 }}>3.</span> Os
-            scripts do UTMify ficam fora deste bloco — adicione via HFCM ou
-            WPCode no{" "}
-            <code style={{ color: "#888", fontSize: "0.8rem" }}>
-              &lt;head&gt;
-            </code>{" "}
-            do WordPress (c&#243;digos comentados dentro do bloco para
-            refer&#234;ncia).
+            <span style={{ color: "#C1121F", fontWeight: 700 }}>3.</span> Para
+            trocar o link do checkout: busque{" "}
+            <code style={{ color: "#888", fontSize: "0.8rem" }}>hotmart</code>{" "}
+            no c&#243;digo e edite a URL.
           </p>
           <p style={{ marginTop: "0.5rem", color: "#555", fontSize: "0.8rem" }}>
             Dica: fa&#231;a Ctrl+A dentro da caixa de texto e depois Ctrl+C para
-            selecionar e copiar tudo.
+            copiar tudo.
           </p>
         </div>
 
-        {/* Botão copiar */}
         <button
           type="button"
           onClick={handleCopy}
@@ -427,7 +400,6 @@ export default function DownloadPage() {
           {copied ? "\u2713 COPIADO!" : "COPIAR C\u00D3DIGO"}
         </button>
 
-        {/* Textarea com o código */}
         <textarea
           ref={taRef}
           readOnly
