@@ -1,412 +1,233 @@
-import { useRef, useState } from "react";
-
-// ─── CÓDIGO HTML DO SITE (sem scripts da Vturb) ───────────────────────────────
-// Este é o código limpo do site para colar no widget HTML do Elementor.
-// Não contém nenhum script da Vturb — você adiciona manualmente depois.
-const SITE_HTML =
-  `<!-- =================================================================
-     INSTRUÇÕES DE USO — LEIA ANTES DE COLAR
-
-     1. Cole este código inteiro no widget HTML do Elementor.
-
-     2. ADICIONAR O VÍDEO DA VTURB:
-        Localize a seção marcada com o comentário:
-        "=== ADICIONE AQUI O CÓDIGO DA VTURB ==="
-        Cole o código fornecido pela Vturb dentro desse bloco.
-
-        Exemplo:
-        <vturb-smartplayer id="vid-SEU-ID-AQUI"
-          style="display:block;margin:0 auto;width:100%">
-        </vturb-smartplayer>
-
-     3. SCRIPTS DE PERFORMANCE DA VTURB:
-        Os scripts de performance (<script>, <link rel="preload">,
-        <link rel="dns-prefetch">) devem ser adicionados no <head>
-        da página do WordPress — NÃO dentro deste widget.
-
-     4. BOTÃO DE COMPRA:
-        Localize o comentário "=== LINK DO CHECKOUT HOTMART ==="
-        e edite a URL para trocar o destino do botão.
-        Link atual: https://pay.hotmart.com/S104758048Y?checkoutMode=10
-
-     5. FOOTER:
-        Edite o texto de copyright no bloco marcado com
-        "=== FOOTER - edite o copyright aqui ==="
-================================================================= -->
-
-<style>
-.ec-wrap{background:#000;min-height:100vh;font-family:system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;color:#fff;overflow-x:hidden}
-.ec-wrap *,.ec-wrap *::before,.ec-wrap *::after{box-sizing:border-box}
-.ec-wrap h1,.ec-wrap h2,.ec-wrap h3,.ec-wrap h4{margin:0}
-.ec-wrap p{margin:0}
-.ec-btn{display:inline-flex;align-items:center;justify-content:center;background:#C1121F;color:#fff;font-weight:800;font-size:1.15rem;letter-spacing:.06em;text-transform:uppercase;padding:1.1rem 2.5rem;min-height:56px;border-radius:6px;border:none;cursor:pointer;width:100%;max-width:480px;text-align:center;text-decoration:none;transition:background .18s}
-.ec-btn:hover{background:#a50e19}.ec-btn:active{background:#8e0c15}
-.faq-item{border-bottom:1px solid #2a2a2a}
-.faq-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;padding:1.25rem 0;background:none;border:none;cursor:pointer;text-align:left;gap:1rem;color:#fff}
-.faq-question{font-weight:700;font-size:.97rem;line-height:1.5;color:#fff}
-.faq-icon{flex-shrink:0;transition:transform .25s;color:#888;font-size:1.1rem;line-height:1}
-.faq-icon.ec-open{transform:rotate(180deg);color:#C1121F}
-.faq-answer{color:#888;padding-bottom:1.25rem;line-height:1.8;font-size:.93rem;display:none}
-.faq-answer.ec-open{display:block}
-</style>
-
-<div class="ec-wrap">
-
-<!-- === HERO =================================================================
-     Seção de título principal — edite o texto aqui se necessário
-============================================================================ -->
-<section id="hero" style="display:flex;flex-direction:column;align-items:center;padding:3.5rem 1.5rem 0;background:#000;text-align:center">
-  <div style="max-width:760px;width:100%">
-    <h1 style="font-size:clamp(2rem,5.5vw,3.8rem);font-weight:900;color:#fff;line-height:1.08;margin-bottom:1.75rem;letter-spacing:-.04em">
-      No la est&#225;s perdiendo <span style="color:#C1121F">por falta de amor.</span><br>
-      <span style="color:#d4d4d4">La est&#225;s perdiendo por c&#243;mo</span> <em style="color:#fff;border-bottom:3px solid #C1121F;padding-bottom:2px">reaccionas bajo presi&#243;n.</em>
-    </h1>
-    <p style="font-size:1.25rem;color:#888;line-height:1.65;max-width:540px;margin:0 auto 2rem">El problema no es lo que sientes. <strong style="color:#b0b0b0">Es lo que haces cuando lo sientes.</strong></p>
-    <ul style="list-style:none;padding:0 0 48px;margin:0 auto;text-align:left;display:inline-block">
-      <li style="display:flex;gap:.75rem;margin-bottom:.75rem;color:#d0d0d0;font-size:1rem"><span style="color:#C1121F;margin-top:4px">&#8594;</span>Env&#237;as mensajes impulsivos y luego te arrepientes</li>
-      <li style="display:flex;gap:.75rem;margin-bottom:.75rem;color:#d0d0d0;font-size:1rem"><span style="color:#C1121F;margin-top:4px">&#8594;</span>Explicas demasiado cuando sientes tensi&#243;n</li>
-      <li style="display:flex;gap:.75rem;margin-bottom:.75rem;color:#d0d0d0;font-size:1rem"><span style="color:#C1121F;margin-top:4px">&#8594;</span>Sientes ansiedad cuando ella tarda en responder</li>
-      <li style="display:flex;gap:.75rem;margin-bottom:.75rem;color:#d0d0d0;font-size:1rem"><span style="color:#C1121F;margin-top:4px">&#8594;</span>Revisas el chat constantemente</li>
-    </ul>
-  </div>
-</section>
-
-<!-- === VÍDEO ================================================================
-     Seção do player de vídeo
-============================================================================ -->
-<section id="video" style="background:#000;padding:0 1.5rem;text-align:center">
-  <div style="max-width:700px;margin:0 auto">
-    <div style="margin-bottom:48px;display:flex;flex-direction:column;align-items:center">
-      <p style="font-size:clamp(1.75rem,5.5vw,2.2rem);font-weight:800;color:#fff;line-height:1.2;max-width:300px">Mira esto hasta el final.</p>
-      <div style="height:28px"></div>
-      <p style="font-size:clamp(1rem,3vw,1.15rem);color:rgba(255,255,255,.55);line-height:1.6;max-width:320px">Vas a entender por qu&#233; sigues perdiendo postura&#8230;</p>
-      <p style="font-size:clamp(1rem,3vw,1.15rem);color:rgba(255,255,255,.55);line-height:1.6;max-width:320px;margin-top:6px">y qu&#233; hacer exactamente en el momento en que ocurre.</p>
-    </div>
-
-    <!-- === ADICIONE AQUI O CÓDIGO DA VTURB ================================
-         Cole o código do player fornecido pela Vturb dentro deste bloco.
-         O layout está preservado: largura máxima 700px, centralizado,
-         com borda arredondada. O player vai se encaixar perfeitamente.
-
-         Exemplo do que colar:
-         <vturb-smartplayer id="vid-SEU-ID-AQUI"
-           style="display:block;margin:0 auto;width:100%">
-         </vturb-smartplayer>
-
-         IMPORTANTE: O script da Vturb NÃO deve ficar aqui dentro.
-         Coloque o script no <head> ou antes do </body> da página.
-    ====================================================================== -->
-    <div style="border-radius:12px;border:1px solid #2a2a2a;overflow:hidden;min-height:200px">
-
-    </div>
-    <!-- === FIM DO BLOCO DE VÍDEO ========================================= -->
-
-  </div>
-</section>
-
-<!-- === EL ERROR ============================================================= -->
-<section id="error" style="background:#000;padding:clamp(48px,6vw,72px) 1.5rem">
-  <div style="max-width:680px;margin:0 auto">
-    <h2 style="font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;color:#fff;margin-bottom:2.5rem;text-align:center">El error que cambia <span style="color:#C1121F">completamente la din&#225;mica</span></h2>
-    <div style="display:flex;flex-direction:column;gap:1.5rem">
-      <p style="color:#c8c8c8;line-height:1.8;font-size:1.05rem;padding-left:1.25rem;border-left:3px solid #2a2a2a">Cuando sientes presi&#243;n emocional, tu cerebro entra en modo supervivencia. No piensa. Reacciona.</p>
-      <p style="color:#c8c8c8;line-height:1.8;font-size:1.05rem;padding-left:1.25rem;border-left:3px solid #2a2a2a">Esa reacci&#243;n &#8212; el mensaje impulsivo, la explicaci&#243;n de m&#225;s, el silencio lleno de ansiedad &#8212; destruye tu postura en segundos.</p>
-      <p style="color:#c8c8c8;line-height:1.8;font-size:1.05rem;padding-left:1.25rem;border-left:3px solid #2a2a2a">Y la postura lo cambia todo. No las palabras. No las intenciones. La postura.</p>
-      <p style="color:#fff;line-height:1.8;font-size:1.05rem;padding-left:1.25rem;border-left:3px solid #C1121F">El verdadero problema no es lo que sientes. Es que no tienes un sistema para regularte antes de actuar.</p>
-    </div>
-    <div style="margin-top:clamp(32px,5vw,48px);display:flex;justify-content:center">
-      <button class="ec-btn" onclick="ecScrollToPrecio()">ENTENDER EL PROTOCOLO</button>
-    </div>
-  </div>
-</section>
-
-<!-- === SISTEMA (4 pasos) ==================================================== -->
-<section id="solucion" style="background:#000;padding:clamp(48px,6vw,72px) 1.5rem">
-  <div style="max-width:820px;margin:0 auto">
-    <h2 style="font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;color:#fff;text-align:center;max-width:620px;margin:0 auto 3rem">Un sistema dise&#241;ado para el momento exacto <span style="color:#C1121F">antes de que te sabotees</span></h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;margin-bottom:3rem">
-      <div style="background:#0a0a0a;border:1px solid #2a2a2a;border-radius:10px;padding:1.75rem"><div style="font-size:3.5rem;font-weight:900;color:#C1121F;line-height:1;margin-bottom:.75rem;opacity:.9">1</div><h3 style="font-weight:800;color:#fff;font-size:1.1rem;margin-bottom:.5rem">Interrupci&#243;n</h3><p style="color:#888;font-size:.92rem;line-height:1.7">Corta el impulso en el momento exacto antes de reaccionar.</p></div>
-      <div style="background:#0a0a0a;border:1px solid #2a2a2a;border-radius:10px;padding:1.75rem"><div style="font-size:3.5rem;font-weight:900;color:#C1121F;line-height:1;margin-bottom:.75rem;opacity:.9">2</div><h3 style="font-weight:800;color:#fff;font-size:1.1rem;margin-bottom:.5rem">Estabilizaci&#243;n</h3><p style="color:#888;font-size:.92rem;line-height:1.7">Recupera el control interno en segundos y baja la intensidad emocional.</p></div>
-      <div style="background:#0a0a0a;border:1px solid #2a2a2a;border-radius:10px;padding:1.75rem"><div style="font-size:3.5rem;font-weight:900;color:#C1121F;line-height:1;margin-bottom:.75rem;opacity:.9">3</div><h3 style="font-weight:800;color:#fff;font-size:1.1rem;margin-bottom:.5rem">Silencio estrat&#233;gico</h3><p style="color:#888;font-size:.92rem;line-height:1.7">No reacciones. Mant&#233;n el control y deja que la tensi&#243;n juegue a tu favor.</p></div>
-      <div style="background:#0a0a0a;border:1px solid #2a2a2a;border-radius:10px;padding:1.75rem"><div style="font-size:3.5rem;font-weight:900;color:#C1121F;line-height:1;margin-bottom:.75rem;opacity:.9">4</div><h3 style="font-weight:800;color:#fff;font-size:1.1rem;margin-bottom:.5rem">Respuesta estructurada</h3><p style="color:#888;font-size:.92rem;line-height:1.7">Cuando act&#250;es, ser&#225; desde el control&#8230; no desde la necesidad.</p></div>
-    </div>
-    <blockquote style="text-align:center;padding:2rem;background:#111;border:1px solid #2a2a2a;border-radius:10px">
-      <p style="font-size:clamp(1.2rem,3vw,1.6rem);font-weight:800;color:#fff;line-height:1.3">&#8220;Primero cortas el impulso. <span style="color:#C1121F">Despu&#233;s decides.</span> No al rev&#233;s.&#8221;</p>
-    </blockquote>
-    <div style="margin-top:clamp(32px,5vw,48px);display:flex;justify-content:center">
-      <button class="ec-btn" onclick="ecScrollToPrecio()">QUIERO APLICAR ESTO</button>
-    </div>
-  </div>
-</section>
-
-<!-- === PROTOCOLO (3 minutos) ================================================ -->
-<section id="protocolo" style="background:#111;padding:clamp(48px,6vw,72px) 1.5rem">
-  <div style="max-width:660px;margin:0 auto;text-align:center">
-    <h2 style="font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;color:#fff;margin-bottom:.75rem">Tres minutos antes de <span style="color:#C1121F">arruinarlo todo</span></h2>
-    <p style="color:#888;margin-bottom:2.5rem;font-size:.95rem">El protocolo que usas en el momento exacto en que pierdes el control</p>
-    <div style="border:1px solid #2a2a2a;border-radius:12px;background:#000;overflow:hidden">
-      <div style="padding:1.75rem 2rem;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;display:flex;gap:1.5rem;align-items:flex-start"><div style="flex-shrink:0;background:#C1121F;border-radius:6px;padding:.35rem .65rem;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;white-space:nowrap;margin-top:3px">Min. 1</div><div><h3 style="font-weight:800;color:#fff;font-size:1rem;margin-bottom:.3rem">Reconocimiento</h3><p style="color:#888;font-size:.9rem;line-height:1.7">Detecta el impulso en el instante en que aparece. N&#243;mbralo&#8230; pero no act&#250;es.</p></div></div>
-      <div style="padding:1.75rem 2rem;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;display:flex;gap:1.5rem;align-items:flex-start"><div style="flex-shrink:0;background:#C1121F;border-radius:6px;padding:.35rem .65rem;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;white-space:nowrap;margin-top:3px">Min. 2</div><div><h3 style="font-weight:800;color:#fff;font-size:1rem;margin-bottom:.3rem">Regulaci&#243;n</h3><p style="color:#888;font-size:.9rem;line-height:1.7">Aplica la t&#233;cnica que corta la reacci&#243;n autom&#225;tica y baja la intensidad emocional.</p></div></div>
-      <div style="padding:1.75rem 2rem;text-align:left;display:flex;gap:1.5rem;align-items:flex-start"><div style="flex-shrink:0;background:#C1121F;border-radius:6px;padding:.35rem .65rem;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;white-space:nowrap;margin-top:3px">Min. 3</div><div><h3 style="font-weight:800;color:#fff;font-size:1rem;margin-bottom:.3rem">Decisi&#243;n</h3><p style="color:#888;font-size:.9rem;line-height:1.7">Con la mente estable, eliges c&#243;mo actuar&#8230; o decides no actuar.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- === TODO LO QUE OBTIENES ================================================= -->
-<section id="incluye" style="background:#000;padding:clamp(48px,6vw,72px) 1.5rem;text-align:center">
-  <div style="max-width:580px;margin:0 auto">
-    <h2 style="font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;color:#fff;margin-bottom:2.5rem">Todo lo que obtienes hoy <span style="color:#C1121F">(acceso inmediato)</span></h2>
-    <p style="color:#c8c8c8;font-size:.9rem;font-weight:600;text-align:left;margin-bottom:.75rem">Acceso completo al sistema:</p>
-    <div style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:2.5rem">
-      <div style="display:flex;align-items:flex-start;gap:1rem;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:1rem 1.25rem;text-align:left"><span style="color:#22c55e;font-size:1.1rem;margin-top:1px">&#10003;</span><span style="font-weight:700;color:#fff;font-size:.95rem">Protocolo exacto para cortar la reacci&#243;n en segundos</span></div>
-      <div style="display:flex;align-items:flex-start;gap:1rem;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:1rem 1.25rem;text-align:left"><span style="color:#22c55e;font-size:1.1rem;margin-top:1px">&#10003;</span><span style="font-weight:700;color:#fff;font-size:.95rem">Audios guiados para estabilizarte en el momento exacto</span></div>
-      <div style="display:flex;align-items:flex-start;gap:1rem;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:1rem 1.25rem;text-align:left"><span style="color:#22c55e;font-size:1.1rem;margin-top:1px">&#10003;</span><span style="font-weight:700;color:#fff;font-size:.95rem">M&#233;todo claro para recuperar el control sin reaccionar impulsivamente</span></div>
-      <div style="display:flex;align-items:flex-start;gap:1rem;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:1rem 1.25rem;text-align:left"><span style="color:#22c55e;font-size:1.1rem;margin-top:1px">&#10003;</span><span style="font-weight:700;color:#fff;font-size:.95rem">Instrucciones aplicables en cualquier situaci&#243;n emocional</span></div>
-    </div>
-    <div style="display:flex;justify-content:center">
-      <button class="ec-btn" onclick="ecScrollToPrecio()">QUIERO ACCEDER AHORA</button>
-    </div>
-  </div>
-</section>
-
-<!-- === ¿ESTE SISTEMA ES PARA TI? (2 cards) ================================== -->
-<section id="para-quien" style="background:#111;padding:clamp(48px,6vw,72px) 1.5rem">
-  <div style="max-width:860px;margin:0 auto">
-    <h2 style="font-size:clamp(1.4rem,3.5vw,2rem);font-weight:800;color:#fff;margin-bottom:2.5rem;text-align:center">&#191;Este sistema es para ti?</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem">
-      <div style="border:1px solid #2a2a2a;background:#0a0a0a;border-radius:12px;padding:2rem">
-        <h3 style="font-weight:800;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:#22c55e;margin-bottom:1.5rem">&#10003; Para qui&#233;n es</h3>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.85rem">
-          <li style="display:flex;gap:.75rem;align-items:flex-start;color:#c8c8c8;font-size:.93rem;line-height:1.6"><span style="color:#22c55e;flex-shrink:0;margin-top:3px">&#10003;</span>Para hombres que reaccionan de forma impulsiva bajo presi&#243;n emocional</li>
-          <li style="display:flex;gap:.75rem;align-items:flex-start;color:#c8c8c8;font-size:.93rem;line-height:1.6"><span style="color:#22c55e;flex-shrink:0;margin-top:3px">&#10003;</span>Para quienes quieren recuperar su postura sin jugar juegos</li>
-          <li style="display:flex;gap:.75rem;align-items:flex-start;color:#c8c8c8;font-size:.93rem;line-height:1.6"><span style="color:#22c55e;flex-shrink:0;margin-top:3px">&#10003;</span>Para los que ya cometieron errores y quieren reencuadrarse</li>
-          <li style="display:flex;gap:.75rem;align-items:flex-start;color:#c8c8c8;font-size:.93rem;line-height:1.6"><span style="color:#22c55e;flex-shrink:0;margin-top:3px">&#10003;</span>Para quien quiere responder desde la calma, no desde el miedo</li>
-        </ul>
-      </div>
-      <div style="border:1px solid #2a2a2a;background:#0a0a0a;border-radius:12px;padding:2rem">
-        <h3 style="font-weight:800;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:#C1121F;margin-bottom:1.5rem">&#10007; Para qui&#233;n no es</h3>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.85rem">
-          <li style="display:flex;gap:.75rem;align-items:flex-start;color:#c8c8c8;font-size:.93rem;line-height:1.6"><span style="color:#C1121F;flex-shrink:0;margin-top:3px">&#10007;</span>No es para quienes buscan manipular o hacer juegos mentales</li>
-          <li style="display:flex;gap:.75rem;align-items:flex-start;color:#c8c8c8;font-size:.93rem;line-height:1.6"><span style="color:#C1121F;flex-shrink:0;margin-top:3px">&#10007;</span>No es reconquista ni t&#233;cnicas de seducci&#243;n</li>
-          <li style="display:flex;gap:.75rem;align-items:flex-start;color:#c8c8c8;font-size:.93rem;line-height:1.6"><span style="color:#C1121F;flex-shrink:0;margin-top:3px">&#10007;</span>No es para quien no est&#225; dispuesto a hacer el trabajo interno</li>
-          <li style="display:flex;gap:.75rem;align-items:flex-start;color:#c8c8c8;font-size:.93rem;line-height:1.6"><span style="color:#C1121F;flex-shrink:0;margin-top:3px">&#10007;</span>No es terapia ni coaching de relaciones</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- === PRECIO =============================================================== -->
-<section id="precio" style="background:#000;padding:clamp(48px,6vw,72px) 1.5rem;text-align:center;border-top:3px solid #C1121F">
-  <div style="max-width:480px;margin:0 auto">
-    <p style="font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:20px;line-height:1.5">Disponible hoy. Puede no estar disponible despu&#233;s.</p>
-    <h2 style="font-size:clamp(1.25rem,3vw,1.75rem);font-weight:900;color:#fff;margin-bottom:28px;letter-spacing:-.02em;line-height:1.2">Accede hoy al sistema completo por solo 17 USD (pago &#250;nico)</h2>
-    <div style="margin-bottom:32px"><span style="font-size:clamp(4rem,10vw,6rem);font-weight:900;color:#fff;letter-spacing:-.04em;line-height:1;display:block">$17</span></div>
-    <p style="font-size:.95rem;color:rgba(255,255,255,.75);font-weight:500;line-height:1.5;margin-bottom:24px">Esto es lo que haces en el momento exacto en que pierdes el control.</p>
-
-    <!-- === LINK DO CHECKOUT HOTMART =========================================
-         Para trocar o link de compra: edite a URL no href abaixo.
-         Link atual: https://pay.hotmart.com/S104758048Y?checkoutMode=10
-    ========================================================================= -->
-    <div style="width:100%;max-width:480px;margin-bottom:16px">
-      <a href="https://pay.hotmart.com/S104758048Y?checkoutMode=10" class="ec-btn" style="display:inline-flex">ACCEDER AHORA</a>
-    </div>
-    <!-- === FIM DO BOTÃO DE CHECKOUT ======================================= -->
-
-    <p style="font-size:.8rem;color:rgba(255,255,255,.65);line-height:1.6">Acceso inmediato &#8226; Pago &#250;nico &#8226; Garant&#237;a 7 d&#237;as<br>&#128274; Pago seguro &#8226; Protecci&#243;n SSL</p>
-  </div>
-</section>
-
-<!-- === GARANTÍA ============================================================= -->
-<section id="garantia" style="background:#111;padding:3rem 1.5rem;text-align:center">
-  <div style="max-width:480px;margin:0 auto">
-    <h2 style="font-size:clamp(1.5rem,4vw,2rem);font-weight:800;color:#fff;margin-bottom:1.25rem">Garant&#237;a de 7 d&#237;as</h2>
-    <div style="background:#111;border:1px solid #2a2a2a;border-radius:12px;padding:1.75rem;color:#888;line-height:1.9;font-size:.97rem">
-      <p>Tienes <strong style="color:#fff">7 d&#237;as.</strong><br>Aplica el protocolo.<br>Si no sientes mayor claridad y control, puedes pedir reembolso.<br><strong style="color:#fff">Sin complicaciones.</strong></p>
-    </div>
-  </div>
-</section>
-
-<!-- === FAQ ================================================================== -->
-<section id="faq" style="background:#000;padding:3rem 1.5rem">
-  <div style="max-width:660px;margin:0 auto">
-    <h2 style="font-size:clamp(1.5rem,4vw,2.1rem);font-weight:800;color:#fff;margin-bottom:2.5rem;text-align:center">Preguntas frecuentes</h2>
-    <div>
-      <div class="faq-item"><button class="faq-toggle" onclick="ecToggleFaq(this)"><span class="faq-question">&#191;Esto es reconquista?</span><span class="faq-icon">&#9662;</span></button><div class="faq-answer">No. No vas a perseguir a nadie ni usar t&#233;cnicas para recuperar a alguien. Esto es sobre regular tu estado emocional y mantener tu postura.</div></div>
-      <div class="faq-item"><button class="faq-toggle" onclick="ecToggleFaq(this)"><span class="faq-question">&#191;Esto es manipulaci&#243;n?</span><span class="faq-icon">&#9662;</span></button><div class="faq-answer">No. Manipulaci&#243;n es intentar controlar a otros. Esto es aprender a controlarte a ti mismo.</div></div>
-      <div class="faq-item"><button class="faq-toggle" onclick="ecToggleFaq(this)"><span class="faq-question">&#191;Y si ya comet&#237; errores?</span><span class="faq-icon">&#9662;</span></button><div class="faq-answer">La mayor&#237;a de los hombres que usan este sistema ya los cometieron. El protocolo no borra el pasado, pero te da las herramientas para no seguir acumulando errores.</div></div>
-      <div class="faq-item"><button class="faq-toggle" onclick="ecToggleFaq(this)"><span class="faq-question">&#191;Y si ella ya est&#225; distante?</span><span class="faq-icon">&#9662;</span></button><div class="faq-answer">Entonces m&#225;s raz&#243;n para trabajar tu postura. La distancia se profundiza con reacciones impulsivas. Se reduce con calma consistente.</div></div>
-      <div class="faq-item"><button class="faq-toggle" onclick="ecToggleFaq(this)"><span class="faq-question">&#191;Cu&#225;nto tiempo tarda en funcionar?</span><span class="faq-icon">&#9662;</span></button><div class="faq-answer">El primer resultado lo puedes ver en la primera situaci&#243;n de presi&#243;n que enfrentes.</div></div>
-      <div class="faq-item"><button class="faq-toggle" onclick="ecToggleFaq(this)"><span class="faq-question">&#191;Necesito experiencia previa?</span><span class="faq-icon">&#9662;</span></button><div class="faq-answer">No. El sistema est&#225; dise&#241;ado para ser aplicado directamente, sin conocimientos previos.</div></div>
-      <div class="faq-item"><button class="faq-toggle" onclick="ecToggleFaq(this)"><span class="faq-question">&#191;Y si no me funciona?</span><span class="faq-icon">&#9662;</span></button><div class="faq-answer">Tienes 7 d&#237;as de garant&#237;a. Si aplicas el protocolo y no sientes m&#225;s claridad y control, te devolvemos el dinero.</div></div>
-    </div>
-    <div style="margin-top:3rem;display:flex;justify-content:center">
-      <button class="ec-btn" onclick="ecScrollToPrecio()">ACCEDER AHORA</button>
-    </div>
-  </div>
-</section>
-
-<!-- === CTA FINAL ============================================================ -->
-<section style="background:#000;padding:3.5rem 1.5rem;text-align:center">
-  <div style="max-width:700px;margin:0 auto">
-    <h2 style="font-size:clamp(2rem,5.5vw,3.4rem);font-weight:900;color:#fff;line-height:1.15;letter-spacing:-.04em">Cada reacci&#243;n impulsiva <span style="color:#C1121F">debilita tu postura.</span><br>Cada respuesta controlada <span style="text-decoration:underline;text-decoration-color:#C1121F;text-decoration-thickness:3px;text-underline-offset:6px">la fortalece.</span></h2>
-  </div>
-</section>
-
-<!-- === FOOTER ===============================================================
-     Edite o texto de copyright abaixo
-============================================================================ -->
-<footer style="background:#0a0a0a;border-top:1px solid #1e1e1e;padding:2rem 1.5rem 1.5rem">
-  <p style="color:#777;font-size:.78rem;text-align:center;line-height:1.6;max-width:540px;margin:0 auto 1.5rem">Este contenido es educativo. No reemplaza terapia ni asesor&#237;a profesional.</p>
-  <!-- === FOOTER - edite o copyright aqui === -->
-  <p style="color:#444;font-size:.75rem;text-align:center;margin-top:1.5rem;border-top:1px solid #1e1e1e;padding-top:1.5rem">&#169; 2026 protocoloinquebrantable. Todos los derechos reservados.</p>
-</footer>
-
-<!-- === JAVASCRIPT: accordion FAQ e scroll suave para #precio ================ -->
-<script>
-function ecScrollToPrecio(){var el=document.getElementById('precio');if(el)el.scrollIntoView({behavior:'smooth'})}
-function ecToggleFaq(btn){var a=btn.nextElementSibling,ic=btn.querySelector('.faq-icon'),open=a.classList.contains('ec-open');document.querySelectorAll('.faq-answer').forEach(function(x){x.classList.remove('ec-open')});document.querySelectorAll('.faq-icon').forEach(function(x){x.classList.remove('ec-open')});if(!open){a.classList.add('ec-open');ic.classList.add('ec-open')}}
-</scr` +
-  `ipt>
-
-<!-- === SCRIPTS ADICIONAIS ==================================================
-     Se precisar adicionar outros scripts (analytics, pixel, etc.),
-     cole aqui antes do fechamento da div principal.
-============================================================================ -->
-
-</div>`;
+import { useState } from "react";
+import { SITE_HTML } from "./siteHtml";
 
 export default function DownloadPage() {
-  const taRef = useRef<HTMLTextAreaElement>(null);
   const [copied, setCopied] = useState(false);
 
+  function handleDownload() {
+    const blob = new Blob([SITE_HTML], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "el-codigo-landing.html";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   function handleCopy() {
-    const ta = taRef.current;
-    if (!ta) return;
-    ta.focus();
-    ta.select();
-    try {
-      document.execCommand("copy");
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    } catch {
-      // fallback silent
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(SITE_HTML).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      });
+    } else {
+      // Fallback for browsers without clipboard API
+      const ta = document.createElement("textarea");
+      ta.value = SITE_HTML;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      ta.style.top = "0";
+      ta.style.left = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand("copy");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      } catch (_e) {
+        // silent fallback failure
+      }
+      document.body.removeChild(ta);
     }
   }
 
   return (
     <div
+      data-ocid="descarga.page"
       style={{
-        background: "#000",
+        background: "#000000",
         minHeight: "100vh",
-        padding: "2.5rem 1.5rem 4rem",
-        color: "#fff",
-        fontFamily: "system-ui,-apple-system,sans-serif",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "2rem 1.5rem",
+        fontFamily: "system-ui, -apple-system, sans-serif",
+        color: "#ffffff",
+        WebkitFontSmoothing: "antialiased",
       }}
     >
-      <div style={{ maxWidth: "860px", margin: "0 auto" }}>
+      <div
+        style={{
+          maxWidth: "520px",
+          width: "100%",
+          textAlign: "center",
+        }}
+      >
+        {/* Header */}
         <h1
           style={{
-            fontSize: "clamp(1.4rem,4vw,2rem)",
-            fontWeight: 800,
-            color: "#fff",
+            fontSize: "clamp(1.6rem, 4vw, 2.2rem)",
+            fontWeight: 900,
+            color: "#ffffff",
+            letterSpacing: "-0.03em",
+            lineHeight: 1.15,
             marginBottom: "0.5rem",
-            lineHeight: 1.2,
           }}
         >
-          C&#243;digo HTML — El C&#243;digo
+          El C&oacute;digo
         </h1>
         <p
           style={{
-            color: "#666",
+            color: "#666666",
             fontSize: "0.9rem",
-            marginBottom: "0.5rem",
-            lineHeight: 1.7,
+            marginBottom: "2.5rem",
+            lineHeight: 1.5,
           }}
         >
-          C&#243;digo limpo do site sem nenhum script da Vturb. Cole no widget
-          HTML do Elementor.
-        </p>
-        <p
-          style={{
-            color: "#555",
-            fontSize: "0.82rem",
-            marginBottom: "2rem",
-            lineHeight: 1.7,
-            background: "#0a0a0a",
-            border: "1px solid #1e1e1e",
-            borderRadius: "6px",
-            padding: "0.85rem 1rem",
-          }}
-        >
-          <strong style={{ color: "#aaa" }}>Como usar:</strong> Cole este
-          c&#243;digo no widget HTML. Depois, adicione o c&#243;digo da Vturb no
-          local marcado com{" "}
-          <code
-            style={{
-              background: "#1a1a1a",
-              border: "1px solid #333",
-              borderRadius: "3px",
-              padding: "1px 5px",
-              color: "#C1121F",
-              fontSize: "0.78rem",
-            }}
-          >
-            ADICIONE AQUI O C&#211;DIGO DA VTURB
-          </code>{" "}
-          e os scripts de performance no{" "}
-          <strong style={{ color: "#aaa" }}>&lt;head&gt;</strong> da
-          p&#225;gina.
+          Descarga o copia el HTML completo para WordPress / Elementor
         </p>
 
+        {/* PRIMARY: Download button */}
         <button
           type="button"
-          onClick={handleCopy}
+          data-ocid="descarga.primary_button"
+          onClick={handleDownload}
           style={{
-            display: "inline-flex",
+            display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: copied ? "#16a34a" : "#C1121F",
-            color: "#fff",
-            fontWeight: 800,
-            fontSize: "1rem",
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            padding: "0.9rem 2rem",
-            minHeight: "52px",
-            borderRadius: "6px",
-            border: "none",
-            cursor: "pointer",
-            marginBottom: "1rem",
-            transition: "background 0.2s",
+            gap: "0.6rem",
             width: "100%",
-            maxWidth: "400px",
+            background: "#C1121F",
+            color: "#ffffff",
+            fontWeight: 800,
+            fontSize: "1.1rem",
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+            padding: "1.1rem 2rem",
+            minHeight: "60px",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+            marginBottom: "0.75rem",
+            transition: "background 0.15s",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = "#a50e19";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = "#C1121F";
           }}
         >
-          {copied ? "\u2713 COPIADO!" : "COPIAR C\u00D3DIGO"}
+          <span style={{ fontSize: "1.3rem" }}>&#11015;</span>
+          BAIXAR ARQUIVO HTML
         </button>
 
-        <textarea
-          ref={taRef}
-          readOnly
-          value={SITE_HTML}
+        {/* SECONDARY: Copy button */}
+        <button
+          type="button"
+          data-ocid="descarga.secondary_button"
+          onClick={handleCopy}
           style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.5rem",
             width: "100%",
-            height: "400px",
-            background: "#0d0d0d",
-            border: "1px solid #1e1e1e",
-            borderRadius: "6px",
-            color: "#c8c8c8",
-            fontFamily: "monospace",
-            fontSize: "0.72rem",
-            lineHeight: 1.5,
-            padding: "0.85rem",
-            resize: "vertical",
-            display: "block",
-            boxSizing: "border-box",
-            outline: "none",
+            background: "transparent",
+            color: copied ? "#22c55e" : "#aaaaaa",
+            fontWeight: 700,
+            fontSize: "0.9rem",
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+            padding: "0.85rem 2rem",
+            minHeight: "48px",
+            border: `1px solid ${copied ? "#22c55e" : "#333333"}`,
+            borderRadius: "8px",
+            cursor: "pointer",
+            marginBottom: "2rem",
+            transition: "border-color 0.15s, color 0.15s",
           }}
-        />
+        >
+          {copied ? "\u2713 COPIADO!" : "COPIAR C\u00d3DIGO"}
+        </button>
+
+        {/* Info box */}
+        <div
+          style={{
+            background: "#0a0a0a",
+            border: "1px solid #1e1e1e",
+            borderRadius: "8px",
+            padding: "1.25rem 1.5rem",
+            textAlign: "left",
+            marginBottom: "1.5rem",
+          }}
+        >
+          <p
+            style={{
+              fontSize: "0.78rem",
+              color: "#666666",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              marginBottom: "0.75rem",
+            }}
+          >
+            O arquivo inclui:
+          </p>
+          <ul
+            style={{
+              listStyle: "none",
+              padding: 0,
+              margin: 0,
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.5rem",
+            }}
+          >
+            {[
+              "HTML completo do site (sem scripts externos)",
+              "Espa\u00e7o reservado com instru\u00e7\u00f5es para o player Vturb",
+              "Coment\u00e1rio marcando onde trocar o link do Hotmart",
+              "FAQ com acorde\u00e3o em JavaScript puro",
+              "Layout responsivo, fundo preto, sem depend\u00eancias",
+            ].map((item) => (
+              <li
+                key={item}
+                style={{
+                  display: "flex",
+                  gap: "0.6rem",
+                  alignItems: "flex-start",
+                  color: "#888888",
+                  fontSize: "0.85rem",
+                  lineHeight: 1.5,
+                }}
+              >
+                <span style={{ color: "#22c55e", flexShrink: 0 }}>
+                  &#10003;
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p
+          style={{
+            fontSize: "0.75rem",
+            color: "#444444",
+            lineHeight: 1.6,
+          }}
+        >
+          Cole o HTML no widget Elementor (sem
+          &lt;html&gt;/&lt;head&gt;/&lt;body&gt;).
+          <br />
+          Adicione scripts do Vturb e UTMify manualmente no WordPress.
+        </p>
       </div>
     </div>
   );
