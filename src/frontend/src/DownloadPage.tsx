@@ -1,24 +1,37 @@
 import { useRef, useState } from "react";
 
-// ─── CÓDIGO PARA ELEMENTOR ────────────────────────────────────────────────────
-// Sem <html>, <head>, <body> — vai direto no widget HTML do Elementor.
-// O script do Vturb já está incluído no final deste bloco.
-const ELEMENTOR_CONTENT =
+// ─── CÓDIGO HTML DO SITE (sem scripts da Vturb) ───────────────────────────────
+// Este é o código limpo do site para colar no widget HTML do Elementor.
+// Não contém nenhum script da Vturb — você adiciona manualmente depois.
+const SITE_HTML =
   `<!-- =================================================================
      INSTRUÇÕES DE USO — LEIA ANTES DE COLAR
 
      1. Cole este código inteiro no widget HTML do Elementor.
 
-     2. SCRIPT VTURB — já está incluído no final deste bloco.
-        Para trocar o vídeo: substitua as 2 ocorrências do ID:
-          ID atual: 69cb28db953ef32c144df9b8
-        • No atributo id da tag <vturb-smartplayer> na seção VÍDEO abaixo.
-        • Na URL do <script> src no final deste arquivo.
+     2. ADICIONAR O VÍDEO DA VTURB:
+        Localize a seção marcada com o comentário:
+        "=== ADICIONE AQUI O CÓDIGO DA VTURB ==="
+        Cole o código fornecido pela Vturb dentro desse bloco.
 
-     3. BOTÃO DE COMPRA: aponta para https://pay.hotmart.com/S104758048Y?checkoutMode=10
-        Para trocar: busque "hotmart" neste arquivo e edite a URL.
+        Exemplo:
+        <vturb-smartplayer id="vid-SEU-ID-AQUI"
+          style="display:block;margin:0 auto;width:100%">
+        </vturb-smartplayer>
 
-     4. FOOTER: edite o texto de copyright no final deste arquivo.
+     3. SCRIPTS DE PERFORMANCE DA VTURB:
+        Os scripts de performance (<script>, <link rel="preload">,
+        <link rel="dns-prefetch">) devem ser adicionados no <head>
+        da página do WordPress — NÃO dentro deste widget.
+
+     4. BOTÃO DE COMPRA:
+        Localize o comentário "=== LINK DO CHECKOUT HOTMART ==="
+        e edite a URL para trocar o destino do botão.
+        Link atual: https://pay.hotmart.com/S104758048Y?checkoutMode=10
+
+     5. FOOTER:
+        Edite o texto de copyright no bloco marcado com
+        "=== FOOTER - edite o copyright aqui ==="
 ================================================================= -->
 
 <style>
@@ -39,9 +52,9 @@ const ELEMENTOR_CONTENT =
 
 <div class="ec-wrap">
 
-<!-- ═══════════════════════════════════════════════════
-     HERO
-══════════════════════════════════════════════════════ -->
+<!-- === HERO =================================================================
+     Seção de título principal — edite o texto aqui se necessário
+============================================================================ -->
 <section id="hero" style="display:flex;flex-direction:column;align-items:center;padding:3.5rem 1.5rem 0;background:#000;text-align:center">
   <div style="max-width:760px;width:100%">
     <h1 style="font-size:clamp(2rem,5.5vw,3.8rem);font-weight:900;color:#fff;line-height:1.08;margin-bottom:1.75rem;letter-spacing:-.04em">
@@ -58,11 +71,9 @@ const ELEMENTOR_CONTENT =
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════
-     VÍDEO (Vturb)
-     ID atual: vid-69cb28db953ef32c144df9b8
-     Para trocar: substitua o ID aqui E no <script> no final deste arquivo.
-══════════════════════════════════════════════════════ -->
+<!-- === VÍDEO ================================================================
+     Seção do player de vídeo
+============================================================================ -->
 <section id="video" style="background:#000;padding:0 1.5rem;text-align:center">
   <div style="max-width:700px;margin:0 auto">
     <div style="margin-bottom:48px;display:flex;flex-direction:column;align-items:center">
@@ -71,16 +82,29 @@ const ELEMENTOR_CONTENT =
       <p style="font-size:clamp(1rem,3vw,1.15rem);color:rgba(255,255,255,.55);line-height:1.6;max-width:320px">Vas a entender por qu&#233; sigues perdiendo postura&#8230;</p>
       <p style="font-size:clamp(1rem,3vw,1.15rem);color:rgba(255,255,255,.55);line-height:1.6;max-width:320px;margin-top:6px">y qu&#233; hacer exactamente en el momento en que ocurre.</p>
     </div>
-    <div style="border-radius:12px;border:1px solid #2a2a2a;overflow:hidden">
-      <!-- VTURB PLAYER TAG — ID atual: vid-69cb28db953ef32c144df9b8 -->
-      <vturb-smartplayer id="vid-69cb28db953ef32c144df9b8" style="display:block;margin:0 auto;width:100%"></vturb-smartplayer>
+
+    <!-- === ADICIONE AQUI O CÓDIGO DA VTURB ================================
+         Cole o código do player fornecido pela Vturb dentro deste bloco.
+         O layout está preservado: largura máxima 700px, centralizado,
+         com borda arredondada. O player vai se encaixar perfeitamente.
+
+         Exemplo do que colar:
+         <vturb-smartplayer id="vid-SEU-ID-AQUI"
+           style="display:block;margin:0 auto;width:100%">
+         </vturb-smartplayer>
+
+         IMPORTANTE: O script da Vturb NÃO deve ficar aqui dentro.
+         Coloque o script no <head> ou antes do </body> da página.
+    ====================================================================== -->
+    <div style="border-radius:12px;border:1px solid #2a2a2a;overflow:hidden;min-height:200px">
+
     </div>
+    <!-- === FIM DO BLOCO DE VÍDEO ========================================= -->
+
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════
-     EL ERROR
-══════════════════════════════════════════════════════ -->
+<!-- === EL ERROR ============================================================= -->
 <section id="error" style="background:#000;padding:clamp(48px,6vw,72px) 1.5rem">
   <div style="max-width:680px;margin:0 auto">
     <h2 style="font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;color:#fff;margin-bottom:2.5rem;text-align:center">El error que cambia <span style="color:#C1121F">completamente la din&#225;mica</span></h2>
@@ -96,9 +120,7 @@ const ELEMENTOR_CONTENT =
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════
-     SISTEMA (4 pasos)
-══════════════════════════════════════════════════════ -->
+<!-- === SISTEMA (4 pasos) ==================================================== -->
 <section id="solucion" style="background:#000;padding:clamp(48px,6vw,72px) 1.5rem">
   <div style="max-width:820px;margin:0 auto">
     <h2 style="font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;color:#fff;text-align:center;max-width:620px;margin:0 auto 3rem">Un sistema dise&#241;ado para el momento exacto <span style="color:#C1121F">antes de que te sabotees</span></h2>
@@ -117,9 +139,7 @@ const ELEMENTOR_CONTENT =
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════
-     PROTOCOLO (3 minutos)
-══════════════════════════════════════════════════════ -->
+<!-- === PROTOCOLO (3 minutos) ================================================ -->
 <section id="protocolo" style="background:#111;padding:clamp(48px,6vw,72px) 1.5rem">
   <div style="max-width:660px;margin:0 auto;text-align:center">
     <h2 style="font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;color:#fff;margin-bottom:.75rem">Tres minutos antes de <span style="color:#C1121F">arruinarlo todo</span></h2>
@@ -132,9 +152,7 @@ const ELEMENTOR_CONTENT =
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════
-     TODO LO QUE OBTIENES
-══════════════════════════════════════════════════════ -->
+<!-- === TODO LO QUE OBTIENES ================================================= -->
 <section id="incluye" style="background:#000;padding:clamp(48px,6vw,72px) 1.5rem;text-align:center">
   <div style="max-width:580px;margin:0 auto">
     <h2 style="font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;color:#fff;margin-bottom:2.5rem">Todo lo que obtienes hoy <span style="color:#C1121F">(acceso inmediato)</span></h2>
@@ -151,9 +169,7 @@ const ELEMENTOR_CONTENT =
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════
-     ¿ESTE SISTEMA ES PARA TI? (2 cards)
-══════════════════════════════════════════════════════ -->
+<!-- === ¿ESTE SISTEMA ES PARA TI? (2 cards) ================================== -->
 <section id="para-quien" style="background:#111;padding:clamp(48px,6vw,72px) 1.5rem">
   <div style="max-width:860px;margin:0 auto">
     <h2 style="font-size:clamp(1.4rem,3.5vw,2rem);font-weight:800;color:#fff;margin-bottom:2.5rem;text-align:center">&#191;Este sistema es para ti?</h2>
@@ -180,30 +196,28 @@ const ELEMENTOR_CONTENT =
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════
-     PRECIO
-══════════════════════════════════════════════════════ -->
+<!-- === PRECIO =============================================================== -->
 <section id="precio" style="background:#000;padding:clamp(48px,6vw,72px) 1.5rem;text-align:center;border-top:3px solid #C1121F">
   <div style="max-width:480px;margin:0 auto">
     <p style="font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:20px;line-height:1.5">Disponible hoy. Puede no estar disponible despu&#233;s.</p>
     <h2 style="font-size:clamp(1.25rem,3vw,1.75rem);font-weight:900;color:#fff;margin-bottom:28px;letter-spacing:-.02em;line-height:1.2">Accede hoy al sistema completo por solo 17 USD (pago &#250;nico)</h2>
     <div style="margin-bottom:32px"><span style="font-size:clamp(4rem,10vw,6rem);font-weight:900;color:#fff;letter-spacing:-.04em;line-height:1;display:block">$17</span></div>
     <p style="font-size:.95rem;color:rgba(255,255,255,.75);font-weight:500;line-height:1.5;margin-bottom:24px">Esto es lo que haces en el momento exacto en que pierdes el control.</p>
-    <!-- ═══════════════════════════════════════════
-         BOTÃO DE COMPRA — LINK DO CHECKOUT HOTMART
-         Para trocar o link: edite a URL abaixo.
+
+    <!-- === LINK DO CHECKOUT HOTMART =========================================
+         Para trocar o link de compra: edite a URL no href abaixo.
          Link atual: https://pay.hotmart.com/S104758048Y?checkoutMode=10
-    ══════════════════════════════════════════════ -->
+    ========================================================================= -->
     <div style="width:100%;max-width:480px;margin-bottom:16px">
       <a href="https://pay.hotmart.com/S104758048Y?checkoutMode=10" class="ec-btn" style="display:inline-flex">ACCEDER AHORA</a>
     </div>
+    <!-- === FIM DO BOTÃO DE CHECKOUT ======================================= -->
+
     <p style="font-size:.8rem;color:rgba(255,255,255,.65);line-height:1.6">Acceso inmediato &#8226; Pago &#250;nico &#8226; Garant&#237;a 7 d&#237;as<br>&#128274; Pago seguro &#8226; Protecci&#243;n SSL</p>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════
-     GARANTÍA
-══════════════════════════════════════════════════════ -->
+<!-- === GARANTÍA ============================================================= -->
 <section id="garantia" style="background:#111;padding:3rem 1.5rem;text-align:center">
   <div style="max-width:480px;margin:0 auto">
     <h2 style="font-size:clamp(1.5rem,4vw,2rem);font-weight:800;color:#fff;margin-bottom:1.25rem">Garant&#237;a de 7 d&#237;as</h2>
@@ -213,9 +227,7 @@ const ELEMENTOR_CONTENT =
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════
-     FAQ
-══════════════════════════════════════════════════════ -->
+<!-- === FAQ ================================================================== -->
 <section id="faq" style="background:#000;padding:3rem 1.5rem">
   <div style="max-width:660px;margin:0 auto">
     <h2 style="font-size:clamp(1.5rem,4vw,2.1rem);font-weight:800;color:#fff;margin-bottom:2.5rem;text-align:center">Preguntas frecuentes</h2>
@@ -234,40 +246,33 @@ const ELEMENTOR_CONTENT =
   </div>
 </section>
 
-<!-- CTA FINAL -->
+<!-- === CTA FINAL ============================================================ -->
 <section style="background:#000;padding:3.5rem 1.5rem;text-align:center">
   <div style="max-width:700px;margin:0 auto">
     <h2 style="font-size:clamp(2rem,5.5vw,3.4rem);font-weight:900;color:#fff;line-height:1.15;letter-spacing:-.04em">Cada reacci&#243;n impulsiva <span style="color:#C1121F">debilita tu postura.</span><br>Cada respuesta controlada <span style="text-decoration:underline;text-decoration-color:#C1121F;text-decoration-thickness:3px;text-underline-offset:6px">la fortalece.</span></h2>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════
-     FOOTER — edite o texto de copyright abaixo
-══════════════════════════════════════════════════════ -->
+<!-- === FOOTER ===============================================================
+     Edite o texto de copyright abaixo
+============================================================================ -->
 <footer style="background:#0a0a0a;border-top:1px solid #1e1e1e;padding:2rem 1.5rem 1.5rem">
   <p style="color:#777;font-size:.78rem;text-align:center;line-height:1.6;max-width:540px;margin:0 auto 1.5rem">Este contenido es educativo. No reemplaza terapia ni asesor&#237;a profesional.</p>
+  <!-- === FOOTER - edite o copyright aqui === -->
   <p style="color:#444;font-size:.75rem;text-align:center;margin-top:1.5rem;border-top:1px solid #1e1e1e;padding-top:1.5rem">&#169; 2026 protocoloinquebrantable. Todos los derechos reservados.</p>
 </footer>
 
-<!-- JAVASCRIPT: accordion FAQ e scroll suave para #precio -->
+<!-- === JAVASCRIPT: accordion FAQ e scroll suave para #precio ================ -->
 <script>
 function ecScrollToPrecio(){var el=document.getElementById('precio');if(el)el.scrollIntoView({behavior:'smooth'})}
 function ecToggleFaq(btn){var a=btn.nextElementSibling,ic=btn.querySelector('.faq-icon'),open=a.classList.contains('ec-open');document.querySelectorAll('.faq-answer').forEach(function(x){x.classList.remove('ec-open')});document.querySelectorAll('.faq-icon').forEach(function(x){x.classList.remove('ec-open')});if(!open){a.classList.add('ec-open');ic.classList.add('ec-open')}}
 </scr` +
   `ipt>
 
-<!-- ═══════════════════════════════════════════════════════
-     VTURB — SCRIPT DO PLAYER
-     Para trocar o vídeo: substitua o ID abaixo E no <vturb-smartplayer> acima.
-     ID atual: 69cb28db953ef32c144df9b8
-══════════════════════════════════════════════════════════ -->
-<script type="text/javascript">
-var s=document.createElement("script");
-s.src="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js";
-s.async=true;
-document.head.appendChild(s);
-</scr` +
-  `ipt>
+<!-- === SCRIPTS ADICIONAIS ==================================================
+     Se precisar adicionar outros scripts (analytics, pixel, etc.),
+     cole aqui antes do fechamento da div principal.
+============================================================================ -->
 
 </div>`;
 
@@ -309,69 +314,50 @@ export default function DownloadPage() {
             lineHeight: 1.2,
           }}
         >
-          C&#243;digo HTML para Elementor
+          C&#243;digo HTML — El C&#243;digo
         </h1>
         <p
           style={{
             color: "#666",
             fontSize: "0.9rem",
-            marginBottom: "2rem",
+            marginBottom: "0.5rem",
             lineHeight: 1.7,
           }}
         >
-          Cole este c&#243;digo diretamente no widget HTML do Elementor.{" "}
-          <strong style={{ color: "#aaa" }}>
-            O script do Vturb j&#225; est&#225; inclu&#237;do no final do bloco.
-          </strong>
+          C&#243;digo limpo do site sem nenhum script da Vturb. Cole no widget
+          HTML do Elementor.
         </p>
-
-        <div
+        <p
           style={{
+            color: "#555",
+            fontSize: "0.82rem",
+            marginBottom: "2rem",
+            lineHeight: 1.7,
             background: "#0a0a0a",
-            border: "1px solid #2a2a2a",
-            borderRadius: "10px",
-            padding: "1.25rem 1.5rem",
-            marginBottom: "1.5rem",
-            fontSize: "0.85rem",
-            lineHeight: 1.8,
-            color: "#aaa",
+            border: "1px solid #1e1e1e",
+            borderRadius: "6px",
+            padding: "0.85rem 1rem",
           }}
         >
-          <p style={{ fontWeight: 700, color: "#fff", marginBottom: "0.5rem" }}>
-            Resumo r&#225;pido:
-          </p>
-          <p>
-            <span style={{ color: "#C1121F", fontWeight: 700 }}>1.</span> Cole
-            este c&#243;digo no widget HTML do Elementor. O Vturb j&#225;
-            est&#225; no final do bloco.
-          </p>
-          <p>
-            <span style={{ color: "#C1121F", fontWeight: 700 }}>2.</span> Para
-            trocar o v&#237;deo: substitua o ID{" "}
-            <code style={{ color: "#888", fontSize: "0.8rem" }}>
-              69cb28db953ef32c144df9b8
-            </code>{" "}
-            em 2 lugares: na tag{" "}
-            <code style={{ color: "#888", fontSize: "0.8rem" }}>
-              &lt;vturb-smartplayer&gt;
-            </code>{" "}
-            e no{" "}
-            <code style={{ color: "#888", fontSize: "0.8rem" }}>
-              &lt;script&gt;
-            </code>{" "}
-            no final.
-          </p>
-          <p>
-            <span style={{ color: "#C1121F", fontWeight: 700 }}>3.</span> Para
-            trocar o link do checkout: busque{" "}
-            <code style={{ color: "#888", fontSize: "0.8rem" }}>hotmart</code>{" "}
-            no c&#243;digo e edite a URL.
-          </p>
-          <p style={{ marginTop: "0.5rem", color: "#555", fontSize: "0.8rem" }}>
-            Dica: fa&#231;a Ctrl+A dentro da caixa de texto e depois Ctrl+C para
-            copiar tudo.
-          </p>
-        </div>
+          <strong style={{ color: "#aaa" }}>Como usar:</strong> Cole este
+          c&#243;digo no widget HTML. Depois, adicione o c&#243;digo da Vturb no
+          local marcado com{" "}
+          <code
+            style={{
+              background: "#1a1a1a",
+              border: "1px solid #333",
+              borderRadius: "3px",
+              padding: "1px 5px",
+              color: "#C1121F",
+              fontSize: "0.78rem",
+            }}
+          >
+            ADICIONE AQUI O C&#211;DIGO DA VTURB
+          </code>{" "}
+          e os scripts de performance no{" "}
+          <strong style={{ color: "#aaa" }}>&lt;head&gt;</strong> da
+          p&#225;gina.
+        </p>
 
         <button
           type="button"
@@ -403,10 +389,10 @@ export default function DownloadPage() {
         <textarea
           ref={taRef}
           readOnly
-          value={ELEMENTOR_CONTENT}
+          value={SITE_HTML}
           style={{
             width: "100%",
-            height: "340px",
+            height: "400px",
             background: "#0d0d0d",
             border: "1px solid #1e1e1e",
             borderRadius: "6px",

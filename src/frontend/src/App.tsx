@@ -1,6 +1,6 @@
 import { ArrowRight, Check, ChevronDown, Shield, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import DownloadPage from "./DownloadPage";
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
@@ -228,44 +228,6 @@ function HeroSection() {
 }
 
 // ─── SECTION 2: VIDEO ─────────────────────────────────────────────────────────
-// ============================================================
-// VTURB — CONFIGURAÇÃO DO PLAYER
-// Para trocar o vídeo, substitua o ID (vid-XXXXXXXX) nos 2 lugares abaixo
-// marcados com "VTURB_PLAYER_ID".
-// ID atual: vid-69cb28db953ef32c144df9b8
-// ============================================================
-function VturbPlayer() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // VTURB_PLAYER_ID (1/2): troque o ID do player abaixo se necessário
-    const PLAYER_ID = "vid-69cb28db953ef32c144df9b8";
-    const SCRIPT_SRC = `https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/${PLAYER_ID.replace("vid-", "")}/v4/player.js`;
-
-    if (!containerRef.current) return;
-
-    // Limpa o container antes de reinserir
-    containerRef.current.innerHTML = "";
-
-    // VTURB_PLAYER_ID (2/2): troque o id= abaixo para o novo ID se necessário
-    const tag = document.createElement("vturb-smartplayer");
-    tag.setAttribute("id", PLAYER_ID);
-    tag.style.cssText = "display:block;margin:0 auto;width:100%";
-    containerRef.current.appendChild(tag);
-
-    // Injeta o script dinamicamente para garantir que carregue após o elemento estar no DOM
-    if (!document.querySelector(`script[src="${SCRIPT_SRC}"]`)) {
-      const s = document.createElement("script");
-      s.src = SCRIPT_SRC;
-      s.async = true;
-      document.head.appendChild(s);
-    }
-  }, []);
-
-  return (
-    <div ref={containerRef} style={{ width: "100%", minHeight: "200px" }} />
-  );
-}
 
 function VideoSection() {
   return (
@@ -331,15 +293,38 @@ function VideoSection() {
           </p>
         </div>
 
-        {/* Vturb Video embed */}
+        {/*
+          ============================================================
+          VÍDEO VTURB — COLE O CÓDIGO DO PLAYER AQUI
+          ------------------------------------------------------------
+          Aqui é o espaço reservado para o player de vídeo da Vturb.
+          Cole o código fornecido pela Vturb neste bloco.
+
+          O layout está preservado: largura máxima 700px, centralizado,
+          com borda arredondada e fundo preto. O player vai se encaixar
+          perfeitamente aqui sem quebrar o layout.
+
+          IMPORTANTE: Não adicione scripts da Vturb dentro deste bloco.
+          Os scripts de performance (<script>, <link rel="preload">,
+          <link rel="dns-prefetch">) devem ir no <head> da página.
+          O script do player deve ir antes do </body>.
+
+          Exemplo do que colar aqui:
+          <vturb-smartplayer id="vid-SEU_ID_AQUI" style="display:block;margin:0 auto;width:100%"></vturb-smartplayer>
+          ============================================================
+        */}
         <div
           style={{
             borderRadius: "12px",
             border: "1px solid #2a2a2a",
             overflow: "hidden",
+            minHeight: "200px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <VturbPlayer />
+          {/* COLE O CÓDIGO DO VTURB AQUI — veja comentário acima */}
         </div>
       </div>
     </section>

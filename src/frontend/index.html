@@ -1,7 +1,13 @@
+<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- ============================================================
+         TÍTULO E META TAGS DA PÁGINA
+         Edite aqui o título e descrição que aparecem no Google/redes sociais
+         ============================================================ -->
     <title>El Código — Controla Tu Impulso</title>
     <meta name="description" content="El sistema práctico para detener tu impulso antes de sabotear tu postura. Controla tus reacciones emocionales bajo presión." />
     <meta property="og:title" content="El Código — Controla Tu Impulso" />
@@ -12,29 +18,31 @@
     <meta name="twitter:description" content="El sistema práctico para detener tu impulso antes de sabotear tu postura." />
     <meta name="theme-color" content="#000000" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-
-    <!-- Vturb performance: timing mark must run before anything else -->
-    <script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
-
     <!-- ============================================================
-         VTURB — CONFIGURAÇÃO DO PLAYER
-         Para trocar o vídeo, substitua o ID nos 2 lugares abaixo
-         marcados com "VTURB_PLAYER_ID".
-         ID atual: 69cb28db953ef32c144df9b8
-         ============================================================ -->
-    <link rel="preconnect" href="https://scripts.converteai.net" crossorigin />
-    <link rel="preconnect" href="https://cdn.converteai.net" crossorigin />
-    <link rel="dns-prefetch" href="https://scripts.converteai.net">
-    <link rel="dns-prefetch" href="https://cdn.converteai.net">
-    <link rel="dns-prefetch" href="https://images.converteai.net">
-    <link rel="dns-prefetch" href="https://api.vturb.com.br">
-    <!-- VTURB_PLAYER_ID: preload — troque o ID na URL abaixo se necessário -->
-    <link rel="preload" href="https://scripts.converteai.net/c8a20b51-83e1-4757-946e-5e61e0c6f8ed/players/69cb28db953ef32c144df9b8/v4/player.js" as="script">
-    <!-- O script do Vturb é injetado dinamicamente pelo componente React para garantir carregamento correto -->
-    <!-- ============================================================
-         FIM DA CONFIGURAÇÃO VTURB
+         FIM DAS META TAGS
          ============================================================ -->
 
+    <!-- ============================================================
+         SCRIPTS DE PERFORMANCE DO VTURB — ADICIONE AQUI MANUALMENTE
+
+         Cole aqui os scripts de performance/preload fornecidos pela Vturb.
+         Estes scripts devem ficar no <head>, ANTES do fechamento </head>.
+
+         Exemplo do bloco a colar:
+
+         <script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
+         <link rel="preload" href="URL_DO_PLAYER_JS" as="script">
+         <link rel="dns-prefetch" href="https://cdn.converteai.net">
+         ... demais preloads e dns-prefetch ...
+
+         ============================================================ -->
+
+    <!-- ============================================================
+         OUTROS SCRIPTS DE RASTREAMENTO (Pixel, Analytics, etc.)
+         Cole aqui qualquer script de rastreamento que precise ficar no <head>
+         ============================================================ -->
+
+    <!-- CSS base: fundo preto garantido antes do React carregar -->
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html {
@@ -69,5 +77,10 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- ============================================================
+         SCRIPTS DO BODY — ADICIONE AQUI SE NECESSÁRIO
+         Cole aqui scripts que devem ficar antes do </body>
+         ============================================================ -->
   </body>
 </html>
